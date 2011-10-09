@@ -1,26 +1,25 @@
 /*
- * Line.cpp
+ * HalfLine.cpp
  *
  *  Created on: 09-10-2011
  *      Author: ghik
  */
 
 #include "commons.h"
-#include "Line.h"
+#include "HalfLine.h"
 
-Line::Line(double _begx, double _begy, double _dirAngle) :
+HalfLine::HalfLine(double _begx, double _begy, double _dirAngle) :
 		begx(_begx), begy(_begy), dirAngle(_dirAngle) {
 }
 
-Line::~Line() {
+HalfLine::~HalfLine() {
 }
 
-void Line::draw(cairo_t *cr) const {
+void HalfLine::draw(cairo_t *cr) const {
 	beginDraw(cr, begx, begy, dirAngle);
 
 	applyLineColor(cr);
-
-	cairo_move_to(cr, -FARAWAY, 0);
+	cairo_move_to(cr, 0, 0);
 	cairo_line_to(cr, FARAWAY, 0);
 	cairo_stroke(cr);
 	cairo_move_to(cr, 0, 0);
@@ -31,27 +30,26 @@ void Line::draw(cairo_t *cr) const {
 	endDraw(cr);
 }
 
-double Line::getBegx() const {
+double HalfLine::getBegx() const {
 	return begx;
 }
 
-double Line::getBegy() const {
+double HalfLine::getBegy() const {
 	return begy;
 }
 
-double Line::getDirAngle() const {
+double HalfLine::getDirAngle() const {
 	return dirAngle;
 }
 
-void Line::setBegx(double begx) {
+void HalfLine::setBegx(double begx) {
 	this->begx = begx;
 }
 
-void Line::setBegy(double begy) {
+void HalfLine::setBegy(double begy) {
 	this->begy = begy;
 }
 
-void Line::setDirAngle(double dirAngle) {
+void HalfLine::setDirAngle(double dirAngle) {
 	this->dirAngle = dirAngle;
 }
-

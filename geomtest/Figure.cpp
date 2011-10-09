@@ -10,6 +10,9 @@
 #include <gtk/gtk.h>
 #include <cairo/cairo.h>
 
+#include <iostream>
+using namespace std;
+
 Figure::Figure() :
 		widget(NULL) {
 	setLineColor(0, 0, 0, 1);
