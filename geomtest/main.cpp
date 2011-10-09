@@ -7,43 +7,10 @@
 #include <iostream>
 #include <sstream>
 #include <set>
+#include "commons.h"
+#include "Dot.h"
+#include "Line.h"
 using namespace std;
-
-#define FARAWAY 2000
-
-const double LINE_WIDTH = 1;
-const double POINT_SIZE = 3;
-const double FONT_SIZE = 14;
-const char* FONT_FACE = "URW Chancery L";
-const double LABEL_OFFSET[2] = { 5, -5 };
-
-double rad(double deg) {
-	return deg * M_PI / 180.0L;
-}
-
-double dist(double x1, double y1, double x2, double y2) {
-	return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-}
-
-void start_draw(cairo_t* cr, double x, double y, double angle) {
-	cairo_save(cr);
-	cairo_translate(cr, x, y);
-	cairo_rotate(cr, angle);
-	cairo_move_to(cr, 0, 0);
-}
-
-void end_draw(cairo_t* cr) {
-	cairo_stroke(cr);
-	cairo_restore(cr);
-}
-
-void put_label(cairo_t* cr, const char* label) {
-	if (label != NULL) {
-		cairo_rel_move_to(cr, LABEL_OFFSET[0], LABEL_OFFSET[1]);
-		cairo_show_text(cr, label);
-		cairo_rel_move_to(cr, -LABEL_OFFSET[0], -LABEL_OFFSET[1]);
-	}
-}
 
 void draw_grid(GtkWidget* widget, cairo_t* cr, int prec) {
 	GtkAllocation allocation;
@@ -64,6 +31,8 @@ void draw_grid(GtkWidget* widget, cairo_t* cr, int prec) {
 
 	cairo_stroke(cr);
 }
+
+/*
 
 void draw_point(cairo_t* cr, double x, double y, const char* label = NULL) {
 	start_draw(cr, x, y, 0);
@@ -146,83 +115,7 @@ void draw_polygon(cairo_t* cr, double points[][2], int num_points) {
 	cairo_line_to(cr, points[0][0], points[0][1]);
 
 	end_draw(cr);
-}
-
-class Figure {
-public:
-	Figure();
-	virtual ~Figure() {
-	}
-
-protected:
-	double lineColor[4];
-	double fillColor[4];
-	string label;
-
-public:
-	virtual void draw(cairo_t* cr) const = 0;
-    const string& getLabel() const;
-
-    void setLabel(const string&);
-};
-
-Figure::Figure() {
-}
-
-const string& Figure::getLabel() const
-{
-    return label;
-}
-
-void Figure::setLabel(const string& label) {
-	this->label = label;
-}
-
-class Dot : public Figure {
-private:
-	double x;
-	double y;
-	double size;
-public:
-	Dot(double _x, double _y) :
-			x(_x), y(_y), size(POINT_SIZE) {
-	}
-
-	virtual ~Dot() {
-	}
-
-	virtual void draw(cairo_t* cr) const;
-	bool inside(double x, double y) const;
-
-	double getX() const;
-	void setX(double x);
-	double getY() const;
-	void setY(double y);
-};
-
-void Dot::draw(cairo_t* cr) const {
-	draw_point(cr, x, y, label.c_str());
-}
-
-bool Dot::inside(double x, double y) const {
-	return dist(this->x, this->y, x, y) <= size;
-}
-
-double Dot::getX() const {
-	return x;
-}
-
-void Dot::setX(double x) {
-	this->x = x;
-}
-
-double Dot::getY() const {
-	return y;
-}
-
-void Dot::setY(double y) {
-	this->y = y;
-}
+}*/
 
 set<Dot*> dots;
 Dot* dragged = NULL;
@@ -238,6 +131,9 @@ void paint(GtkWidget* widget) {
 			CAIRO_FONT_WEIGHT_NORMAL);
 	cairo_set_font_size(cr, FONT_SIZE);
 
+	Line line(100, 200, rad(30));
+	line.setLabel("jakas linia");
+	line.draw(cr);
 	/*
 	 draw_line(cr, 100, 200, rad(30), "jakas linia");
 	 draw_halfline(cr, 300, 400, rad(-80), "do góry");
@@ -247,10 +143,11 @@ void paint(GtkWidget* widget) {
 	 double polygon[][2] = { { 50, 50 }, { 200, 100 }, { 500, 30 }, { 700, 500 },
 	 { 100, 530 } };
 	 draw_polygon(cr, polygon, 5);
-	 */
+	*/
 
 	for (set<Dot*>::iterator it = dots.begin(); it != dots.end(); it++) {
-		(*it)->draw(cr);
+		Dot* dot = *it;
+		dot->draw(cr);
 	}
 }
 
@@ -264,7 +161,8 @@ bool button_press(GtkWidget* widget, GdkEvent* event, gpointer data) {
 		return true;
 	}
 	for (set<Dot*>::iterator it = dots.begin(); it != dots.end(); it++) {
-		if ((*it)->inside(event->button.x, event->button.y)) {
+		Dot* dot = *it;
+		if (dot->inside(event->button.x, event->button.y)) {
 			dragged = *it;
 			return true;
 		}
@@ -283,6 +181,7 @@ bool button_release(GtkWidget* widget, GdkEvent* event, gpointer data) {
 	dragged = NULL;
 	return true;
 }
+
 
 int main(int argc, char *argv[]) {
 	GtkWidget *window, *area;
@@ -309,10 +208,11 @@ int main(int argc, char *argv[]) {
 
 	srand(time(0));
 	for(int i=0;i<100;i++) {
-		Dot* dot = new Dot(rand()%800, rand()%600);
+		Dot* const dot = new Dot(rand()%800, rand()%600);
 		ostringstream ss;
 		ss << i;
 		dot->setLabel(ss.str());
+		dot->setFillColor(0,0,1,1);
 		dots.insert(dot);
 	}
 
