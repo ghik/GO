@@ -11,27 +11,37 @@
 #include "Figure.h"
 
 class Segment: public Figure {
-private:
-	double x1;
-	double y1;
-	double x2;
-	double y2;
-
 public:
+	Segment();
 	Segment(double x1, double y1, double x2, double y2);
 	virtual ~Segment();
 
 	virtual void draw(cairo_t *cr) const;
 	virtual ostream& serialize(ostream& str) const;
 
-    double getX1() const;
-    double getX2() const;
-    double getY1() const;
-    double getY2() const;
-    void setX1(double x1);
-    void setX2(double x2);
-    void setY1(double y1);
-    void setY2(double y2);
+	virtual void registerDraggables(vector<Draggable*>& draggables);
+
+	double x1;
+	double y1;
+	double x2;
+	double y2;
+};
+
+class SegmentEnd: public Draggable {
+private:
+	SegmentEnd(Segment* seg, bool beg);
+
+public:
+	virtual ~SegmentEnd();
+
+	virtual bool drags(double x, double y);
+	virtual void draggedTo(double x, double y);
+
+private:
+	Segment* seg;
+	bool beg;
+
+	friend class Segment;
 };
 
 #endif /* SEGMENT_H_ */

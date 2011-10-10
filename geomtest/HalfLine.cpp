@@ -8,6 +8,9 @@
 #include "commons.h"
 #include "HalfLine.h"
 
+HalfLine::HalfLine() {
+}
+
 HalfLine::HalfLine(double _begx, double _begy, double _dirAngle) :
 		begx(_begx), begy(_begy), dirAngle(_dirAngle) {
 }
@@ -31,30 +34,21 @@ void HalfLine::draw(cairo_t *cr) const {
 }
 
 ostream& HalfLine::serialize(ostream& str) const {
-	str << "line " << getBegx() << " " << getBegy() << " " << deg(getDirAngle()) << ' ' << getLabel() << endl;
+	str << "line " << begx << " " << begy << " " << deg(dirAngle) << ' '
+			<< label << endl;
 	return str;
 }
 
-double HalfLine::getBegx() const {
-	return begx;
+void HalfLine::registerDraggables(vector<Draggable*> & draggables) {
+	draggables.push_back(this);
 }
 
-double HalfLine::getBegy() const {
-	return begy;
+bool HalfLine::drags(double x, double y) {
+	return dist(begx, begy, x, y) <= DRAG_RANGE;
 }
 
-double HalfLine::getDirAngle() const {
-	return dirAngle;
+void HalfLine::draggedTo(double x, double y) {
+	begx = x;
+	begy = y;
 }
 
-void HalfLine::setBegx(double begx) {
-	this->begx = begx;
-}
-
-void HalfLine::setBegy(double begy) {
-	this->begy = begy;
-}
-
-void HalfLine::setDirAngle(double dirAngle) {
-	this->dirAngle = dirAngle;
-}

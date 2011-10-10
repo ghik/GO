@@ -10,18 +10,12 @@
 
 #include <string>
 #include <ostream>
+#include <vector>
 #include <gtk/gtk.h>
+#include "Draggable.h"
 using namespace std;
 
 class Figure {
-private:
-	string label;
-	double lineColor[4];
-	double fillColor[4];
-	double labelColor[4];
-
-	GtkWidget* widget;
-
 public:
 	Figure();
 	virtual ~Figure();
@@ -35,21 +29,18 @@ protected:
 	void repaint() const;
 
 public:
+	virtual void registerDraggables(std::vector<Draggable*>& draggables) = 0;
 	virtual void draw(cairo_t* cr) const = 0;
 	virtual ostream& serialize(ostream& str) const = 0;
-
 	void setWidget(GtkWidget* widget);
-    const string& getLabel() const;
-    void setLabel(const string&);
-    const double* getLineColor() const;
-    void setLineColor(double r, double g, double b, double a = 1.0);
-    void setLineColor(double* color);
-    const double* getFillColor() const;
-    void setFillColor(double r, double g, double b, double a = 1.0);
-    void setFillColor(double* color);
-    const double* getLabelColor() const;
-    void setLabelColor(double r, double g, double b, double a = 1.0);
-    void setLabelColor(double* color);
+
+	string label;
+	double lineColor[4];
+	double fillColor[4];
+	double labelColor[4];
+
+private:
+	GtkWidget* widget;
 };
 
 ostream& operator<<(ostream& str, const Figure& figure);

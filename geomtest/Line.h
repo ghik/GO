@@ -9,26 +9,24 @@
 #define LINE_H_
 
 #include "Figure.h"
+#include "Draggable.h"
 
-class Line: public Figure {
-private:
-	double begx;
-	double begy;
-	double dirAngle;
-
+class Line: public Figure, public Draggable {
 public:
+	Line();
 	Line(double begx, double begy, double dirAngle);
 	virtual ~Line();
 
 	virtual void draw(cairo_t* cr) const;
 	virtual ostream& serialize(ostream& str) const;
 
-    double getBegx() const;
-    double getBegy() const;
-    double getDirAngle() const;
-    void setBegx(double begx);
-    void setBegy(double begy);
-    void setDirAngle(double dirAngle);
+	virtual void registerDraggables(vector<Draggable*>& draggables);
+	virtual bool drags(double x, double y);
+	virtual void draggedTo(double x, double y);
+
+	double begx;
+	double begy;
+	double dirAngle;
 };
 
 #endif /* LINE_H_ */

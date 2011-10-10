@@ -12,17 +12,36 @@
 #include <vector>
 
 class Polygon: public Figure {
-private:
-	double* verts;
-	int nVerts;
-
 public:
+	Polygon();
 	Polygon(double* verts, int nVerts);
 	Polygon(const std::vector<double>& points);
 	virtual ~Polygon();
 
 	virtual void draw(cairo_t *cr) const;
 	virtual ostream& serialize(ostream& str) const;
+
+	virtual void registerDraggables(vector<Draggable*>& draggables);
+
+	double* verts;
+	int nVerts;
+};
+
+class PolygonVertex: public Draggable {
+private:
+	PolygonVertex(Polygon* polygon, int vertex);
+
+public:
+	virtual ~PolygonVertex();
+
+	virtual bool drags(double x, double y);
+	virtual void draggedTo(double x, double y);
+
+private:
+	Polygon* polygon;
+	int vertex;
+
+	friend class Polygon;
 };
 
 #endif /* POLYGON_H_ */

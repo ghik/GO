@@ -8,6 +8,9 @@
 #include "commons.h"
 #include "Line.h"
 
+Line::Line() {
+}
+
 Line::Line(double _begx, double _begy, double _dirAngle) :
 		begx(_begx), begy(_begy), dirAngle(_dirAngle) {
 }
@@ -32,31 +35,21 @@ void Line::draw(cairo_t *cr) const {
 }
 
 ostream& Line::serialize(ostream& str) const {
-	str << "line " << getBegx() << " " << getBegy() << " " << deg(getDirAngle()) << ' ' << getLabel() << endl;
+	str << "line " << begx << " " << begy << " " << deg(dirAngle) << ' '
+			<< label << endl;
 	return str;
 }
 
-double Line::getBegx() const {
-	return begx;
+void Line::registerDraggables(vector<Draggable*> & draggables) {
+	draggables.push_back(this);
 }
 
-double Line::getBegy() const {
-	return begy;
+bool Line::drags(double x, double y) {
+	return dist(begx, begy, x, y) <= DRAG_RANGE;
 }
 
-double Line::getDirAngle() const {
-	return dirAngle;
-}
-
-void Line::setBegx(double begx) {
-	this->begx = begx;
-}
-
-void Line::setBegy(double begy) {
-	this->begy = begy;
-}
-
-void Line::setDirAngle(double dirAngle) {
-	this->dirAngle = dirAngle;
+void Line::draggedTo(double x, double y) {
+	begx = x;
+	begy = y;
 }
 

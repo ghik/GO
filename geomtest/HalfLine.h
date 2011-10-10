@@ -9,26 +9,24 @@
 #define HALFLINE_H_
 
 #include "Figure.h"
+#include "Draggable.h"
 
-class HalfLine: public Figure {
-private:
-	double begx;
-	double begy;
-	double dirAngle;
-
+class HalfLine: public Figure, public Draggable {
 public:
+	HalfLine();
 	HalfLine(double begx, double begy, double dirAngle);
 	virtual ~HalfLine();
 
 	virtual void draw(cairo_t* cr) const;
 	virtual ostream& serialize(ostream& str) const;
 
-    double getBegx() const;
-    double getBegy() const;
-    double getDirAngle() const;
-    void setBegx(double begx);
-    void setBegy(double begy);
-    void setDirAngle(double dirAngle);
+	virtual void registerDraggables(vector<Draggable*>& draggables);
+	virtual bool drags(double x, double y);
+	virtual void draggedTo(double x, double y);
+
+	double begx;
+	double begy;
+	double dirAngle;
 };
 
 #endif /* HALFLINE_H_ */

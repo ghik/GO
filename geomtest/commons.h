@@ -11,20 +11,26 @@
 #include <cstdlib>
 #include <gtk/gtk.h>
 #include <cairo/cairo.h>
+#include <ctime>
 
 #define FARAWAY 2000
 
 const double LINE_WIDTH = 1;
 const double POINT_SIZE = 3;
+const double DRAG_RANGE = 5;
 const double FONT_SIZE = 14;
 const char* const FONT_FACE = "Arial";
 const double LABEL_OFFSET[2] = { 5, -5 };
+const time_t REPAINT_INTERVAL = 100;
 
 double rad(double deg);
 double deg(double rad);
 double dist(double x1, double y1, double x2, double y2);
 
+long now();
+
 void setColor(double* color, double r, double g, double b, double a);
+void setColor(double* target, const double* color);
 void draw_grid(GtkWidget* widget, cairo_t* cr, int prec);
 void start_draw(cairo_t* cr, double x, double y, double angle);
 void end_draw(cairo_t *cr);

@@ -5,8 +5,12 @@
  *      Author: ghik
  */
 
+#include "commons.h"
 #include "Segment.h"
 #include <cmath>
+
+Segment::Segment() {
+}
 
 Segment::Segment(double _x1, double _y1, double _x2, double _y2) :
 		x1(_x1), y1(_y1), x2(_x2), y2(_y2) {
@@ -32,38 +36,36 @@ void Segment::draw(cairo_t* cr) const {
 }
 
 ostream& Segment::serialize(ostream& str) const {
-	str << "segment " << getX1() << " " << getY1() << " " << getX2() << " " << getY2() << ' ' << getLabel() << endl;
+	str << "segment " << x1 << " " << y1 << " " << x2 << " " << y2 << ' '
+			<< label << endl;
 	return str;
 }
 
-double Segment::getX1() const {
-	return x1;
+void Segment::registerDraggables(vector<Draggable*> & draggables) {
+	draggables.push_back(new SegmentEnd(this, true));
+	draggables.push_back(new SegmentEnd(this, false));
 }
 
-double Segment::getX2() const {
-	return x2;
+SegmentEnd::SegmentEnd(Segment *_seg, bool _beg) :
+		seg(_seg), beg(_beg) {
 }
 
-double Segment::getY1() const {
-	return y1;
+SegmentEnd::~SegmentEnd() {
 }
 
-double Segment::getY2() const {
-	return y2;
+bool SegmentEnd::drags(double x, double y) {
+	double myx = beg ? seg->x1 : seg->x2;
+	double myy = beg ? seg->y1 : seg->y2;
+	return dist(myx, myy, x, y) <= DRAG_RANGE;
 }
 
-void Segment::setX1(double x1) {
-	this->x1 = x1;
+void SegmentEnd::draggedTo(double x, double y) {
+	if(beg) {
+		seg->x1 = x;
+		seg->y1 = y;
+	} else {
+		seg->x2 = x;
+		seg->y2 = y;
+	}
 }
 
-void Segment::setX2(double x2) {
-	this->x2 = x2;
-}
-
-void Segment::setY1(double y1) {
-	this->y1 = y1;
-}
-
-void Segment::setY2(double y2) {
-	this->y2 = y2;
-}

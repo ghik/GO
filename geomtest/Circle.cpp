@@ -8,6 +8,9 @@
 #include "commons.h"
 #include "Circle.h"
 
+Circle::Circle() {
+}
+
 Circle::Circle(double _cx, double _cy, double _r) :
 		cx(_cx), cy(_cy), r(_r) {
 }
@@ -34,30 +37,10 @@ void Circle::draw(cairo_t *cr) const {
 }
 
 ostream & Circle::serialize(ostream & str) const {
-	str << "circle " << cx << ' ' << cy << ' ' << r << ' ' << getLabel() << endl;
+	str << "circle " << cx << ' ' << cy << ' ' << r << ' ' << label << endl;
 	return str;
 }
 
-double Circle::getCx() const {
-	return cx;
+void Circle::registerDraggables(std::vector<Draggable*> & draggables) {
 }
 
-double Circle::getCy() const {
-	return cy;
-}
-
-double Circle::getR() const {
-	return r;
-}
-
-void Circle::setCx(double cx) {
-	this->cx = cx;
-}
-
-void Circle::setCy(double cy) {
-	this->cy = cy;
-}
-
-void Circle::setR(double r) {
-	this->r = r;
-}

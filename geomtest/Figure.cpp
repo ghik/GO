@@ -15,9 +15,9 @@ using namespace std;
 
 Figure::Figure() :
 		widget(NULL) {
-	setLineColor(0, 0, 0, 1);
-	setLabelColor(0, 0, 0, 1);
-	setFillColor(1, 1, 1, 0);
+	setColor(lineColor, 0, 0, 0, 1);
+	setColor(labelColor, 0, 0, 0, 1);
+	setColor(fillColor, 1, 1, 1, 0);
 }
 
 Figure::~Figure() {
@@ -53,51 +53,6 @@ void Figure::putLabel(cairo_t *cr) const {
 void Figure::endDraw(cairo_t *cr) const {
 	cairo_stroke(cr);
 	cairo_restore(cr);
-}
-
-const string& Figure::getLabel() const {
-	return label;
-}
-
-void Figure::setLabel(const string& label) {
-	this->label = label;
-	repaint();
-}
-
-const double* Figure::getLineColor() const {
-	return lineColor;
-}
-
-void Figure::setLineColor(double r, double g, double b, double a) {
-	setColor(lineColor, r, g, b, a);
-}
-
-void Figure::setLineColor(double *color) {
-	setColor(lineColor, color[0], color[1], color[2], color[3]);
-}
-
-const double* Figure::getFillColor() const {
-	return fillColor;
-}
-
-void Figure::setFillColor(double r, double g, double b, double a) {
-	setColor(fillColor, r, g, b, a);
-}
-
-void Figure::setFillColor(double *color) {
-	setColor(fillColor, color[0], color[1], color[2], color[3]);
-}
-
-const double* Figure::getLabelColor() const {
-	return labelColor;
-}
-
-void Figure::setLabelColor(double r, double g, double b, double a) {
-	setColor(labelColor, r, g, b, a);
-}
-
-void Figure::setLabelColor(double *color) {
-	setColor(labelColor, color[0], color[1], color[2], color[3]);
 }
 
 void Figure::repaint() const {

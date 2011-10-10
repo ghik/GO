@@ -20,8 +20,8 @@ using namespace std;
 #include "Circle.h"
 
 vector<Figure*>* figures = NULL;
-vector<Dot*> dots;
-Dot* dragged = NULL;
+vector<Draggable*> draggables;
+Draggable* dragged = NULL;
 
 vector<Figure*>* parseFigures(const char* filename) {
 	vector<Figure*>* res = new vector<Figure*>;
@@ -43,59 +43,56 @@ vector<Figure*>* parseFigures(const char* filename) {
 			ss >> labelColor[0] >> labelColor[1] >> labelColor[2]
 					>> labelColor[3];
 		} else if (cmd == "dot") {
-			double x, y, size;
-			ss >> x >> y;
-			Dot* dot = new Dot(x, y);
-			dot->setLineColor(lineColor);
-			dot->setFillColor(fillColor);
-			dot->setLabelColor(labelColor);
+			Dot* dot = new Dot;
+			ss >> dot->x >> dot->y;
+			setColor(dot->lineColor, lineColor);
+			setColor(dot->fillColor, fillColor);
+			setColor(dot->labelColor, labelColor);
 			if (!ss.eof()) {
-				ss >> size;
-				cout << size << endl;
-				dot->setSize(size);
+				ss >> dot->size;
 			}
 			if (!ss.eof()) {
-				ss >> label;
-				dot->setLabel(label);
+				ss >> dot->label;
 			}
 			res->push_back(dot);
-			dots.push_back(dot);
+			dot->registerDraggables(draggables);
 		} else if (cmd == "line") {
-			double x, y, angle;
-			ss >> x >> y >> angle;
-			Line* line = new Line(x, y, rad(angle));
-			line->setLineColor(lineColor);
-			line->setFillColor(fillColor);
-			line->setLabelColor(labelColor);
+			double angle;
+			Line* line = new Line;
+			ss >> line->begx >> line->begy >> angle;
+			line->dirAngle = rad(angle);
+			setColor(line->lineColor, lineColor);
+			setColor(line->fillColor, fillColor);
+			setColor(line->labelColor, labelColor);
 			if (!ss.eof()) {
-				ss >> label;
-				line->setLabel(label);
+				ss >> line->label;
 			}
 			res->push_back(line);
+			line->registerDraggables(draggables);
 		} else if (cmd == "hline") {
-			double x, y, angle;
-			ss >> x >> y >> angle;
-			HalfLine* hline = new HalfLine(x, y, rad(angle));
-			hline->setLineColor(lineColor);
-			hline->setFillColor(fillColor);
-			hline->setLabelColor(labelColor);
+			double angle;
+			HalfLine* hline = new HalfLine();
+			ss >> hline->begx >> hline->begy >> angle;
+			hline->dirAngle = rad(angle);
+			setColor(hline->lineColor, lineColor);
+			setColor(hline->fillColor, fillColor);
+			setColor(hline->labelColor, labelColor);
 			if (!ss.eof()) {
-				ss >> label;
-				hline->setLabel(label);
+				ss >> hline->label;
 			}
 			res->push_back(hline);
+			hline->registerDraggables(draggables);
 		} else if (cmd == "segment") {
-			double x1, y1, x2, y2;
-			ss >> x1 >> y1 >> x2 >> y2;
-			Segment* seg = new Segment(x1, y1, x2, y2);
-			seg->setLineColor(lineColor);
-			seg->setFillColor(fillColor);
-			seg->setLabelColor(labelColor);
+			Segment* seg = new Segment();
+			ss >> seg->x1 >> seg->y1 >> seg->x2 >> seg->y2;
+			setColor(seg->lineColor, lineColor);
+			setColor(seg->fillColor, fillColor);
+			setColor(seg->labelColor, labelColor);
 			if (!ss.eof()) {
-				ss >> label;
-				seg->setLabel(label);
+				ss >> seg->label;
 			}
 			res->push_back(seg);
+			seg->registerDraggables(draggables);
 		} else if (cmd == "polygon") {
 			vector<double> points;
 			while (!ss.eof()) {
@@ -105,20 +102,19 @@ vector<Figure*>* parseFigures(const char* filename) {
 				points.push_back(y);
 			}
 			Polygon* polygon = new Polygon(points);
-			polygon->setLineColor(lineColor);
-			polygon->setFillColor(fillColor);
-			polygon->setLabelColor(labelColor);
+			setColor(polygon->lineColor, lineColor);
+			setColor(polygon->fillColor, fillColor);
+			setColor(polygon->labelColor, labelColor);
 			res->push_back(polygon);
+			polygon->registerDraggables(draggables);
 		} else if (cmd == "circle") {
-			double cx, cy, r;
-			ss >> cx >> cy >> r;
-			Circle* circle = new Circle(cx, cy, r);
-			circle->setLineColor(lineColor);
-			circle->setFillColor(fillColor);
-			circle->setLabelColor(labelColor);
+			Circle* circle = new Circle;
+			ss >> circle->cx >> circle->cy >> circle->r;
+			setColor(circle->lineColor, lineColor);
+			setColor(circle->fillColor, fillColor);
+			setColor(circle->labelColor, labelColor);
 			if (!ss.eof()) {
-				ss >> label;
-				circle->setLabel(label);
+				ss >> circle->label;
 			}
 			res->push_back(circle);
 		}
@@ -185,9 +181,9 @@ bool button_press(GtkWidget* widget, GdkEvent* event, gpointer data) {
 	if (event->button.button != 1) {
 		return true;
 	}
-	for (vector<Dot*>::iterator it = dots.begin(); it != dots.end(); it++) {
-		Dot* dot = *it;
-		if (dot->inside(event->button.x, event->button.y)) {
+	for (vector<Draggable*>::iterator it = draggables.begin(); it != draggables.end(); it++) {
+		Draggable* draggable = *it;
+		if (draggable->drags(event->button.x, event->button.y)) {
 			dragged = *it;
 			return true;
 		}
@@ -200,18 +196,25 @@ bool button_release(GtkWidget* widget, GdkEvent* event, gpointer data) {
 	if (event->button.button != 1 || dragged == NULL) {
 		return true;
 	}
-	dragged->setX(event->button.x);
-	dragged->setY(event->button.y);
+	dragged->draggedTo(event->button.x, event->button.y);
 	gtk_widget_queue_draw(widget);
 	dragged = NULL;
 	return true;
 }
 
 bool motion_notify(GtkWidget* widget, GdkEvent* event, gpointer data) {
-	GtkLabel* label = (GtkLabel*)data;
+	static long lastRepaintTime = 0;
+	GtkLabel* label = (GtkLabel*) data;
 	ostringstream ss;
 	ss << "(" << event->motion.x << ", " << event->motion.y << ")";
 	gtk_label_set_text(label, ss.str().c_str());
+
+	long nowTime = now();
+	if(dragged != NULL && nowTime-lastRepaintTime > REPAINT_INTERVAL) {
+		lastRepaintTime = nowTime;
+		dragged->draggedTo(event->motion.x, event->motion.y);
+		gtk_widget_queue_draw(widget);
+	}
 	return true;
 }
 
@@ -240,24 +243,14 @@ int main(int argc, char *argv[]) {
 			NULL);
 	g_signal_connect(area, "button-release-event", G_CALLBACK(button_release),
 			NULL);
-	g_signal_connect(area, "motion-notify-event", G_CALLBACK(motion_notify), (gpointer)label);
+	g_signal_connect(area, "motion-notify-event", G_CALLBACK(motion_notify),
+			(gpointer)label);
 
 	gtk_widget_show_all(window);
 
 	gdk_window_set_events(gtk_widget_get_window(area), GDK_ALL_EVENTS_MASK);
 
 	figures = parseFigures("figures.txt");
-
-	/*
-	 srand(time(0));
-	 for (int i = 0; i < 100; i++) {
-	 Dot* const dot = new Dot(rand() % 800, rand() % 600);
-	 ostringstream ss;
-	 ss << i;
-	 dot->setLabel(ss.str());
-	 dot->setFillColor(0, 0, 1, 1);
-	 dots.insert(dot);
-	 }*/
 
 	gtk_main();
 

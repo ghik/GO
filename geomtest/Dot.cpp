@@ -9,10 +9,12 @@
 #include "Dot.h"
 #include <cairo/cairo.h>
 
+Dot::Dot() {
+}
+
 Dot::Dot(double _x, double _y) :
 		x(_x), y(_y), size(POINT_SIZE) {
-	const double* lineColor = getLineColor();
-	setFillColor(lineColor[0], lineColor[1], lineColor[2], lineColor[3]);
+	setColor(fillColor, lineColor);
 }
 
 Dot::~Dot() {
@@ -36,36 +38,20 @@ void Dot::draw(cairo_t *cr) const {
 	endDraw(cr);
 }
 
-ostream& Dot::serialize(ostream& str) const {
-	str << "dot " << getX() << " " << getY() << " " << getSize() << ' ' << getLabel() << endl;
-	return str;
+void Dot::registerDraggables(vector<Draggable*>& draggables) {
+	draggables.push_back(this);
 }
 
-bool Dot::inside(double x, double y) const {
+bool Dot::drags(double x, double y) {
 	return dist(this->x, this->y, x, y) <= size;
 }
 
-double Dot::getSize() const {
-	return size;
-}
-
-double Dot::getX() const {
-	return x;
-}
-
-double Dot::getY() const {
-	return y;
-}
-
-void Dot::setSize(double size) {
-	this->size = size;
-}
-
-void Dot::setX(double x) {
+void Dot::draggedTo(double x, double y) {
 	this->x = x;
-}
-
-void Dot::setY(double y) {
 	this->y = y;
 }
 
+ostream& Dot::serialize(ostream& str) const {
+	str << "dot " << x << " " << y << " " << size << ' ' << label << endl;
+	return str;
+}

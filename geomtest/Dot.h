@@ -9,29 +9,24 @@
 #define DOT_H_
 
 #include "Figure.h"
+#include "Draggable.h"
 
-class Dot: public Figure {
+class Dot: public Figure, public Draggable {
 public:
+	Dot();
 	Dot(double x, double y);
 	virtual ~Dot();
 
-private:
-	double x;
-	double y;
-	double size;
-
-public:
 	virtual void draw(cairo_t* cr) const;
 	virtual ostream& serialize(ostream& str) const;
 
-	bool inside(double x, double y) const;
+	virtual void registerDraggables(vector<Draggable*>& draggables);
+	virtual bool drags(double x, double y);
+	virtual void draggedTo(double x, double y);
 
-    double getSize() const;
-    double getX() const;
-    double getY() const;
-    void setSize(double size);
-    void setX(double x);
-    void setY(double y);
+	double x;
+	double y;
+	double size;
 };
 
 #endif /* DOT_H_ */

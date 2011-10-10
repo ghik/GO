@@ -8,27 +8,23 @@
 #ifndef CIRCLE_H_
 #define CIRCLE_H_
 
+#include <vector>
 #include "Figure.h"
 
 class Circle: public Figure {
-private:
-	double cx;
-	double cy;
-	double r;
-
 public:
+	Circle();
 	Circle(double cx, double cy, double r);
 	virtual ~Circle();
 
 	virtual void draw(cairo_t* cr) const;
 	virtual ostream& serialize(ostream& str) const;
 
-    double getCx() const;
-    double getCy() const;
-    double getR() const;
-    void setCx(double cx);
-    void setCy(double cy);
-    void setR(double r);
+	virtual void registerDraggables(std::vector<Draggable*>& draggables);
+
+	double cx;
+	double cy;
+	double r;
 };
 
 #endif /* CIRCLE_H_ */
