@@ -31,6 +31,11 @@ void Segment::draw(cairo_t* cr) const {
 	endDraw(cr);
 }
 
+ostream& Segment::serialize(ostream& str) const {
+	str << "segment " << getX1() << " " << getY1() << " " << getX2() << " " << getY2() << ' ' << getLabel() << endl;
+	return str;
+}
+
 double Segment::getX1() const {
 	return x1;
 }

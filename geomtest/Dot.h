@@ -22,6 +22,7 @@ private:
 
 public:
 	virtual void draw(cairo_t* cr) const;
+	virtual ostream& serialize(ostream& str) const;
 
 	bool inside(double x, double y) const;
 

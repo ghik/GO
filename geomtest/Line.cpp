@@ -31,6 +31,11 @@ void Line::draw(cairo_t *cr) const {
 	endDraw(cr);
 }
 
+ostream& Line::serialize(ostream& str) const {
+	str << "line " << getBegx() << " " << getBegy() << " " << deg(getDirAngle()) << ' ' << getLabel() << endl;
+	return str;
+}
+
 double Line::getBegx() const {
 	return begx;
 }

@@ -22,6 +22,8 @@ public:
 	virtual ~Segment();
 
 	virtual void draw(cairo_t *cr) const;
+	virtual ostream& serialize(ostream& str) const;
+
     double getX1() const;
     double getX2() const;
     double getY1() const;

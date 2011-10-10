@@ -21,7 +21,9 @@ const char* const FONT_FACE = "URW Chancery L";
 const double LABEL_OFFSET[2] = { 5, -5 };
 
 double rad(double deg);
+double deg(double rad);
 double dist(double x1, double y1, double x2, double y2);
+
 void setColor(double* color, double r, double g, double b, double a);
 void draw_grid(GtkWidget* widget, cairo_t* cr, int prec);
 void start_draw(cairo_t* cr, double x, double y, double angle);

@@ -21,6 +21,8 @@ public:
 	virtual ~HalfLine();
 
 	virtual void draw(cairo_t* cr) const;
+	virtual ostream& serialize(ostream& str) const;
+
     double getBegx() const;
     double getBegy() const;
     double getDirAngle() const;

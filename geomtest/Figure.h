@@ -9,8 +9,9 @@
 #define FIGURE_H_
 
 #include <string>
+#include <ostream>
 #include <gtk/gtk.h>
-using std::string;
+using namespace std;
 
 class Figure {
 private:
@@ -35,16 +36,22 @@ protected:
 
 public:
 	virtual void draw(cairo_t* cr) const = 0;
+	virtual ostream& serialize(ostream& str) const = 0;
 
 	void setWidget(GtkWidget* widget);
     const string& getLabel() const;
     void setLabel(const string&);
     const double* getLineColor() const;
     void setLineColor(double r, double g, double b, double a = 1.0);
+    void setLineColor(double* color);
     const double* getFillColor() const;
     void setFillColor(double r, double g, double b, double a = 1.0);
+    void setFillColor(double* color);
     const double* getLabelColor() const;
     void setLabelColor(double r, double g, double b, double a = 1.0);
+    void setLabelColor(double* color);
 };
+
+ostream& operator<<(ostream& str, const Figure& figure);
 
 #endif /* FIGURE_H_ */

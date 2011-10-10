@@ -30,6 +30,11 @@ void HalfLine::draw(cairo_t *cr) const {
 	endDraw(cr);
 }
 
+ostream& HalfLine::serialize(ostream& str) const {
+	str << "line " << getBegx() << " " << getBegy() << " " << deg(getDirAngle()) << ' ' << getLabel() << endl;
+	return str;
+}
+
 double HalfLine::getBegx() const {
 	return begx;
 }

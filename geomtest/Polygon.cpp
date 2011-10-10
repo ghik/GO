@@ -8,10 +8,18 @@
 #include "Polygon.h"
 
 Polygon::Polygon(double* _verts, int _nVerts): nVerts(_nVerts) {
-	verts = new double[nVerts*2];
+	verts = new double[nVerts];
 	for(int i=0;i<nVerts;i++) {
 		verts[2*i] = _verts[2*i];
 		verts[2*i+1] = _verts[2*i+1];
+	}
+}
+
+Polygon::Polygon(const std::vector<double>& points): nVerts(points.size()/2) {
+	verts = new double[points.size()];
+	for(int i=0;i<nVerts;i++) {
+		verts[2*i] = points[2*i];
+		verts[2*i+1] = points[2*i+1];
 	}
 }
 
@@ -35,3 +43,13 @@ void Polygon::draw(cairo_t *cr) const {
 
 	endDraw(cr);
 }
+
+ostream& Polygon::serialize(ostream& str) const {
+	str << "polygon ";
+	for(int i=0;i<nVerts*2;i++) {
+		str << verts[i] << " ";
+	}
+	str << endl;
+	return str;
+}
+

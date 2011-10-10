@@ -12,6 +12,10 @@ double rad(double deg) {
 	return deg * M_PI / 180.0L;
 }
 
+double deg(double rad) {
+	return rad * 180.0L / M_PI;
+}
+
 double dist(double x1, double y1, double x2, double y2) {
 	return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }

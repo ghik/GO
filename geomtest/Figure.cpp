@@ -24,11 +24,13 @@ Figure::~Figure() {
 }
 
 void Figure::applyLineColor(cairo_t *cr) const {
-	cairo_set_source_rgba(cr, lineColor[0], lineColor[1], lineColor[2], lineColor[3]);
+	cairo_set_source_rgba(cr, lineColor[0], lineColor[1], lineColor[2],
+			lineColor[3]);
 }
 
 void Figure::applyFillColor(cairo_t *cr) const {
-	cairo_set_source_rgba(cr, fillColor[0], fillColor[1], fillColor[2], fillColor[3]);
+	cairo_set_source_rgba(cr, fillColor[0], fillColor[1], fillColor[2],
+			fillColor[3]);
 }
 
 void Figure::beginDraw(cairo_t *cr, double x, double y, double angle) const {
@@ -40,7 +42,8 @@ void Figure::beginDraw(cairo_t *cr, double x, double y, double angle) const {
 
 void Figure::putLabel(cairo_t *cr) const {
 	if (label.length() > 0) {
-		cairo_set_source_rgba(cr, labelColor[0], labelColor[1], labelColor[2], labelColor[3]);
+		cairo_set_source_rgba(cr, labelColor[0], labelColor[1], labelColor[2],
+				labelColor[3]);
 		cairo_rel_move_to(cr, LABEL_OFFSET[0], LABEL_OFFSET[1]);
 		cairo_show_text(cr, label.c_str());
 		cairo_rel_move_to(cr, -LABEL_OFFSET[0], -LABEL_OFFSET[1]);
@@ -69,6 +72,10 @@ void Figure::setLineColor(double r, double g, double b, double a) {
 	setColor(lineColor, r, g, b, a);
 }
 
+void Figure::setLineColor(double *color) {
+	setColor(lineColor, color[0], color[1], color[2], color[3]);
+}
+
 const double* Figure::getFillColor() const {
 	return fillColor;
 }
@@ -77,12 +84,20 @@ void Figure::setFillColor(double r, double g, double b, double a) {
 	setColor(fillColor, r, g, b, a);
 }
 
+void Figure::setFillColor(double *color) {
+	setColor(fillColor, color[0], color[1], color[2], color[3]);
+}
+
 const double* Figure::getLabelColor() const {
 	return labelColor;
 }
 
 void Figure::setLabelColor(double r, double g, double b, double a) {
 	setColor(labelColor, r, g, b, a);
+}
+
+void Figure::setLabelColor(double *color) {
+	setColor(labelColor, color[0], color[1], color[2], color[3]);
 }
 
 void Figure::repaint() const {
@@ -95,3 +110,7 @@ void Figure::setWidget(GtkWidget *widget) {
 	this->widget = widget;
 }
 
+ostream& operator<<(ostream& str, const Figure& figure) {
+	figure.serialize(str);
+	return str;
+}

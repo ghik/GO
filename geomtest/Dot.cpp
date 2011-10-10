@@ -23,7 +23,7 @@ void Dot::draw(cairo_t *cr) const {
 
 	applyLineColor(cr);
 	cairo_move_to(cr, size, 0);
-	cairo_arc(cr, 0, 0, POINT_SIZE, 0, rad(360));
+	cairo_arc(cr, 0, 0, size, 0, rad(360));
 	cairo_stroke_preserve(cr);
 
 	applyFillColor(cr);
@@ -34,6 +34,11 @@ void Dot::draw(cairo_t *cr) const {
 	cairo_stroke(cr);
 
 	endDraw(cr);
+}
+
+ostream& Dot::serialize(ostream& str) const {
+	str << "dot " << getX() << " " << getY() << " " << getSize() << ' ' << getLabel() << endl;
+	return str;
 }
 
 bool Dot::inside(double x, double y) const {
