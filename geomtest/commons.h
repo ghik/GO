@@ -17,7 +17,7 @@
 const double LINE_WIDTH = 1;
 const double POINT_SIZE = 3;
 const double FONT_SIZE = 14;
-const char* const FONT_FACE = "URW Chancery L";
+const char* const FONT_FACE = "Arial";
 const double LABEL_OFFSET[2] = { 5, -5 };
 
 double rad(double deg);

@@ -207,18 +207,32 @@ bool button_release(GtkWidget* widget, GdkEvent* event, gpointer data) {
 	return true;
 }
 
+bool motion_notify(GtkWidget* widget, GdkEvent* event, gpointer data) {
+	GtkLabel* label = (GtkLabel*)data;
+	ostringstream ss;
+	ss << "(" << event->motion.x << ", " << event->motion.y << ")";
+	gtk_label_set_text(label, ss.str().c_str());
+	return true;
+}
+
 int main(int argc, char *argv[]) {
-	GtkWidget *window, *area;
+	GtkWidget *window, *vbox, *area, *label;
 
 	gtk_init(&argc, &argv);
 
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_move(GTK_WINDOW(window), 100, 50);
 
+	vbox = gtk_vbox_new(false, 5);
+	gtk_container_add(GTK_CONTAINER(window), vbox);
+
 	area = gtk_drawing_area_new();
-	gtk_container_add(GTK_CONTAINER(window), area);
+	gtk_container_add(GTK_CONTAINER(vbox), area);
 
 	gtk_drawing_area_size(GTK_DRAWING_AREA(area), 800, 600);
+
+	label = gtk_label_new("");
+	gtk_container_add(GTK_CONTAINER(vbox), label);
 
 	g_signal_connect(window, "delete-event", G_CALLBACK(gtk_main_quit), NULL);
 	g_signal_connect(area, "expose-event", G_CALLBACK(expose), NULL);
@@ -226,9 +240,9 @@ int main(int argc, char *argv[]) {
 			NULL);
 	g_signal_connect(area, "button-release-event", G_CALLBACK(button_release),
 			NULL);
+	g_signal_connect(area, "motion-notify-event", G_CALLBACK(motion_notify), (gpointer)label);
 
-	gtk_widget_show(area);
-	gtk_widget_show(window);
+	gtk_widget_show_all(window);
 
 	gdk_window_set_events(gtk_widget_get_window(area), GDK_ALL_EVENTS_MASK);
 
