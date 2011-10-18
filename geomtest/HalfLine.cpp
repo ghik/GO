@@ -44,7 +44,7 @@ void HalfLine::registerDraggables(vector<Draggable*> & draggables) {
 }
 
 bool HalfLine::drags(double x, double y) {
-	return dist(begx, begy, x, y) <= DRAG_RANGE;
+	return dist(begx, begy, x, y) <= DRAG_RANGE*zoom;
 }
 
 void HalfLine::draggedTo(double x, double y) {

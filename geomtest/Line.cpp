@@ -45,7 +45,7 @@ void Line::registerDraggables(vector<Draggable*> & draggables) {
 }
 
 bool Line::drags(double x, double y) {
-	return dist(begx, begy, x, y) <= DRAG_RANGE;
+	return dist(begx, begy, x, y) <= DRAG_RANGE*zoom;
 }
 
 void Line::draggedTo(double x, double y) {

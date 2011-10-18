@@ -8,10 +8,12 @@
 #ifndef FIGURE_H_
 #define FIGURE_H_
 
+#include "commons.h"
 #include <string>
 #include <ostream>
 #include <vector>
 #include <gtk/gtk.h>
+#include <cairo/cairo.h>
 #include "Draggable.h"
 using namespace std;
 

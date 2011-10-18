@@ -72,7 +72,7 @@ PolygonVertex::~PolygonVertex() {
 }
 
 bool PolygonVertex::drags(double x, double y) {
-	return dist(polygon->verts[2*vertex], polygon->verts[2*vertex+1], x, y) <= DRAG_RANGE;
+	return dist(polygon->verts[2*vertex], polygon->verts[2*vertex+1], x, y) <= DRAG_RANGE*zoom;
 }
 
 void PolygonVertex::draggedTo(double x, double y) {

@@ -19,9 +19,14 @@ using namespace std;
 #include "Polygon.h"
 #include "Circle.h"
 
+GtkWidget *window = NULL, *drawingArea = NULL, *posLabel = NULL;
+
 vector<Figure*>* figures = NULL;
 vector<Draggable*> draggables;
 Draggable* dragged = NULL;
+double zoom = 0.5;
+double centerx = -100;
+double centery = -200;
 
 vector<Figure*>* parseFigures(const char* filename) {
 	vector<Figure*>* res = new vector<Figure*>;
@@ -127,44 +132,43 @@ vector<Figure*>* parseFigures(const char* filename) {
 	return res;
 }
 
+void update_position_label(double x, double y) {
+	ostringstream ss;
+	ss << "(" << x << ", " << y << ")";
+	gtk_label_set_text(GTK_LABEL(posLabel), ss.str().c_str());
+}
+
+void current_position(double* x, double* y) {
+	gint ix, iy;
+	gdk_window_get_pointer(gtk_widget_get_window(drawingArea), &ix,
+			&iy, NULL);
+	*x = ix;
+	*y = iy;
+}
+
 void paint(GtkWidget* widget) {
 	cairo_t* cr = gdk_cairo_create(gtk_widget_get_window(widget));
 
-	draw_grid(widget, cr, 100);
+	cairo_translate(cr, SCREEN_SIZE / 2.0 + centerx,
+			SCREEN_SIZE / 2.0 - centery);
+	cairo_scale(cr, zoom, -zoom);
+
+	draw_grid(cr);
+
+	cairo_font_face_t* fontFace = cairo_toy_font_face_create(FONT_FACE,
+			CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+
+	cairo_matrix_t fontMatrix, identMatrix;
+	cairo_font_options_t* fontOptions = cairo_font_options_create();
+	cairo_matrix_init_scale(&fontMatrix, 3, 3);
+	cairo_matrix_init_identity(&identMatrix);
+	cairo_scaled_font_t* scaledFont = cairo_scaled_font_create(fontFace,
+			&fontMatrix, &identMatrix, fontOptions);
 
 	cairo_set_source_rgb(cr, 0, 0, 0);
-	cairo_set_line_width(cr, LINE_WIDTH);
-	cairo_select_font_face(cr, FONT_FACE, CAIRO_FONT_SLANT_NORMAL,
-			CAIRO_FONT_WEIGHT_NORMAL);
+	cairo_set_line_width(cr, LINE_WIDTH / fabs(zoom));
+	cairo_set_scaled_font(cr, scaledFont);
 	cairo_set_font_size(cr, FONT_SIZE);
-
-	/*
-	 Line line(100, 200, rad(30));
-	 line.setLabel("jakas linia");
-	 line.draw(cr);
-
-	 HalfLine hline(300, 400, rad(-70));
-	 hline.setLabel("jakas półlinia");
-	 hline.draw(cr);
-
-	 Segment seg(50, 100, 400, 200);
-	 seg.setLabel("odcineq");
-	 seg.draw(cr);
-
-
-	 double pol[] = { 50, 50, 200, 100, 500, 30, 700, 500, 100, 530 };
-	 Polygon polygon((double*) pol, 5);
-	 polygon.draw(cr);
-
-	 draw_line(cr, 100, 200, rad(30), "jakas linia");
-	 draw_halfline(cr, 300, 400, rad(-80), "do góry");
-	 draw_segment(cr, 50, 100, 400, 200, "odcineq");
-	 draw_circle(cr, 500, 300, 30, "kół");
-
-	 double polygon[][2] = { { 50, 50 }, { 200, 100 }, { 500, 30 }, { 700, 500 },
-	 { 100, 530 } };
-	 draw_polygon(cr, polygon, 5);
-	 */
 
 	for (vector<Figure*>::iterator it = figures->begin(); it != figures->end();
 			it++) {
@@ -178,48 +182,108 @@ bool expose(GtkWidget* widget, GdkEvent* event, gpointer data) {
 }
 
 bool button_press(GtkWidget* widget, GdkEvent* event, gpointer data) {
-	if (event->button.button != 1) {
-		return true;
-	}
-	for (vector<Draggable*>::iterator it = draggables.begin(); it != draggables.end(); it++) {
-		Draggable* draggable = *it;
-		if (draggable->drags(event->button.x, event->button.y)) {
-			dragged = *it;
-			return true;
+	double x = event->button.x, y = event->button.y;
+	screen_to_view(&x, &y);
+
+	switch (event->button.button) {
+	case 1:
+		for (vector<Draggable*>::iterator it = draggables.begin();
+				it != draggables.end(); it++) {
+			Draggable* draggable = *it;
+			if (draggable->drags(x, y)) {
+				dragged = *it;
+				return true;
+			}
 		}
+		dragged = NULL;
+		break;
+	default:
+		break;
 	}
-	dragged = NULL;
 	return true;
 }
 
 bool button_release(GtkWidget* widget, GdkEvent* event, gpointer data) {
+	double x = event->button.x, y = event->button.y;
+	screen_to_view(&x, &y);
+
 	if (event->button.button != 1 || dragged == NULL) {
 		return true;
 	}
-	dragged->draggedTo(event->button.x, event->button.y);
-	gtk_widget_queue_draw(widget);
+	dragged->draggedTo(x, y);
+	gtk_widget_queue_draw(drawingArea);
 	dragged = NULL;
 	return true;
 }
 
 bool motion_notify(GtkWidget* widget, GdkEvent* event, gpointer data) {
 	static long lastRepaintTime = 0;
-	GtkLabel* label = (GtkLabel*) data;
-	ostringstream ss;
-	ss << "(" << event->motion.x << ", " << event->motion.y << ")";
-	gtk_label_set_text(label, ss.str().c_str());
+
+	double x = event->button.x, y = event->button.y;
+	screen_to_view(&x, &y);
+
+	update_position_label(x, y);
 
 	long nowTime = now();
-	if(dragged != NULL && nowTime-lastRepaintTime > REPAINT_INTERVAL) {
+	if (dragged != NULL && nowTime - lastRepaintTime > REPAINT_INTERVAL) {
 		lastRepaintTime = nowTime;
-		dragged->draggedTo(event->motion.x, event->motion.y);
-		gtk_widget_queue_draw(widget);
+		dragged->draggedTo(x, y);
+		gtk_widget_queue_draw(drawingArea);
 	}
 	return true;
 }
 
+bool scroll(GtkWidget* widget, GdkEvent* event, gpointer data) {
+	double factor = 1;
+	switch (event->scroll.direction) {
+	case GDK_SCROLL_UP:
+		factor = BASE_ZOOM_FACTOR;
+		break;
+	case GDK_SCROLL_DOWN:
+		factor = 1 / BASE_ZOOM_FACTOR;
+		break;
+	default:
+		break;
+	}
+	double x = event->scroll.x, y = event->scroll.y;
+	screen_to_std(&x, &y);
+	zoom *= factor;
+	centerx = x + factor * (centerx - x);
+	centery = y + factor * (centery - y);
+	gtk_widget_queue_draw(drawingArea);
+
+	return true;
+}
+
+bool key_press(GtkWidget* widget, GdkEvent* event, gpointer data) {
+	switch (event->key.keyval) {
+	case KEY_ARROW_LEFT:
+		centerx -= SCREEN_MOVE_AMOUNT;
+		break;
+	case KEY_ARROW_UP:
+		centery += SCREEN_MOVE_AMOUNT;
+		break;
+	case KEY_ARROW_RIGHT:
+		centerx += SCREEN_MOVE_AMOUNT;
+		break;
+	case KEY_ARROW_DOWN:
+		centery -= SCREEN_MOVE_AMOUNT;
+		break;
+	default:
+		break;
+	}
+
+	double x, y;
+	current_position(&x, &y);
+	screen_to_view(&x, &y);
+	update_position_label(x, y);
+
+	gtk_widget_queue_draw(drawingArea);
+	return true;
+}
+
 int main(int argc, char *argv[]) {
-	GtkWidget *window, *vbox, *area, *label;
+	GtkWidget *vbox;
 
 	gtk_init(&argc, &argv);
 
@@ -229,26 +293,33 @@ int main(int argc, char *argv[]) {
 	vbox = gtk_vbox_new(false, 5);
 	gtk_container_add(GTK_CONTAINER(window), vbox);
 
-	area = gtk_drawing_area_new();
-	gtk_container_add(GTK_CONTAINER(vbox), area);
+	drawingArea = gtk_drawing_area_new();
+	gtk_container_add(GTK_CONTAINER(vbox), GTK_WIDGET(drawingArea));
 
-	gtk_drawing_area_size(GTK_DRAWING_AREA(area), 800, 600);
+	gtk_drawing_area_size(GTK_DRAWING_AREA(drawingArea), SCREEN_SIZE, SCREEN_SIZE);
 
-	label = gtk_label_new("");
-	gtk_container_add(GTK_CONTAINER(vbox), label);
+	posLabel = gtk_label_new("");
+	gtk_container_add(GTK_CONTAINER(vbox), GTK_WIDGET(posLabel));
 
-	g_signal_connect(window, "delete-event", G_CALLBACK(gtk_main_quit), NULL);
-	g_signal_connect(area, "expose-event", G_CALLBACK(expose), NULL);
-	g_signal_connect(area, "button-press-event", G_CALLBACK(button_press),
-			NULL);
-	g_signal_connect(area, "button-release-event", G_CALLBACK(button_release),
-			NULL);
-	g_signal_connect(area, "motion-notify-event", G_CALLBACK(motion_notify),
-			(gpointer)label);
+	g_signal_connect(GTK_WIDGET(window), "delete-event",
+			G_CALLBACK(gtk_main_quit), NULL);
+	g_signal_connect(drawingArea, "expose-event",
+			G_CALLBACK(expose), NULL);
+	g_signal_connect(drawingArea, "button-press-event",
+			G_CALLBACK(button_press), NULL);
+	g_signal_connect(drawingArea, "button-release-event",
+			G_CALLBACK(button_release), NULL);
+	g_signal_connect(drawingArea, "motion-notify-event",
+			G_CALLBACK(motion_notify), NULL);
+	g_signal_connect(drawingArea, "scroll-event",
+			G_CALLBACK(scroll), NULL);
+	g_signal_connect(window, "key-press-event",
+			G_CALLBACK(key_press), NULL);
 
-	gtk_widget_show_all(window);
+	gtk_widget_show_all(GTK_WIDGET(window));
 
-	gdk_window_set_events(gtk_widget_get_window(area), GDK_ALL_EVENTS_MASK);
+	gdk_window_set_events(gtk_widget_get_window(drawingArea),
+			GDK_ALL_EVENTS_MASK);
 
 	figures = parseFigures("figures.txt");
 

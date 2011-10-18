@@ -6,9 +6,11 @@
  */
 
 #include "commons.h"
-#include <cmath>
 #include <cstring>
 #include <sys/time.h>
+#include <iostream>
+#include <sstream>
+using namespace std;
 
 double rad(double deg) {
 	return deg * M_PI / 180.0L;
@@ -25,7 +27,21 @@ double dist(double x1, double y1, double x2, double y2) {
 long now() {
 	timeval tv;
 	gettimeofday(&tv, NULL);
-	return tv.tv_sec*1000L+tv.tv_usec/1000;
+	return tv.tv_sec * 1000L + tv.tv_usec / 1000;
+}
+
+void screen_to_std(double* x, double* y) {
+	*x = *x - SCREEN_SIZE / 2.0;
+	*y = SCREEN_SIZE / 2.0 - *y;
+}
+
+void screen_to_view(double* x, double* y) {
+	cairo_matrix_t mat;
+	cairo_matrix_init_identity(&mat);
+	cairo_matrix_scale(&mat, 1 / zoom, -1 / zoom);
+	cairo_matrix_translate(&mat, -SCREEN_SIZE / 2.0 - centerx,
+			-SCREEN_SIZE / 2.0 + centery);
+	cairo_matrix_transform_point(&mat, x, y);
 }
 
 void setColor(double* color, double r, double g, double b, double a) {
@@ -36,27 +52,89 @@ void setColor(double* color, double r, double g, double b, double a) {
 }
 
 void setColor(double* target, const double* color) {
-	memcpy(target, color, 4*sizeof(double));
+	memcpy(target, color, 4 * sizeof(double));
 }
 
-void draw_grid(GtkWidget* widget, cairo_t* cr, int prec) {
-	GtkAllocation allocation;
-	gtk_widget_get_allocation(widget, &allocation);
+void draw_grid(cairo_t* cr) {
+	cairo_save(cr);
+	cairo_set_line_width(cr, 1 / zoom);
+	cairo_select_font_face(cr, GRID_FONT_FACE, CAIRO_FONT_SLANT_NORMAL,
+			CAIRO_FONT_WEIGHT_NORMAL);
+	cairo_set_font_size(cr, GRID_FONT_SIZE);
 
-	cairo_set_source_rgb(cr, 0.6, 0.6, 0.6);
-	cairo_set_line_width(cr, 0.5);
+	double minx = 0, miny = SCREEN_SIZE, maxx = SCREEN_SIZE, maxy = 0;
+	screen_to_view(&minx, &miny);
+	screen_to_view(&maxx, &maxy);
+	double width = maxx - minx, interval = 1;
 
-	for (gint h = 0; h < allocation.height; h += prec) {
-		cairo_move_to(cr, 0, h);
-		cairo_line_to(cr, allocation.width - 1, h);
+	if (width / interval > GRID_SEGMENTS) {
+		while (width / interval > GRID_SEGMENTS) {
+			interval *= 10;
+		}
+	} else {
+		while (10 * width / interval < GRID_SEGMENTS) {
+			interval /= 10;
+		}
 	}
 
-	for (gint w = 0; w < allocation.width; w += prec) {
-		cairo_move_to(cr, w, 0);
-		cairo_line_to(cr, w, allocation.height - 1);
+	double pos;
+
+	pos = ((int) (minx / interval)) * interval;
+	while (pos < maxx) {
+		if (pos == 0) {
+			cairo_set_source_rgb(cr, 0.1, 0.1, 0.1);
+		} else {
+			cairo_set_source_rgb(cr, 0.6, 0.6, 0.6);
+		}
+		cairo_move_to(cr, pos, maxy);
+		cairo_line_to(cr, pos, miny);
+		cairo_stroke(cr);
+
+		cairo_save(cr);
+		cairo_move_to(cr, pos, miny);
+		cairo_scale(cr, 1 / zoom, -1 / zoom);
+		cairo_rel_move_to(cr, GRID_LABEL_OFFSET[0], GRID_LABEL_OFFSET[1]);
+		cairo_set_source_rgb(cr, 0, 0, 0);
+
+		stringstream ss;
+		ss << pos;
+		cairo_show_text(cr, ss.str().c_str());
+
+		cairo_rel_move_to(cr, -GRID_LABEL_OFFSET[0], -GRID_LABEL_OFFSET[1]);
+		cairo_restore(cr);
+
+		pos += interval;
 	}
 
-	cairo_stroke(cr);
+	pos = ((int) (miny / interval)) * interval;
+	while (pos < maxy) {
+		if (pos == 0) {
+			cairo_set_source_rgb(cr, 0, 0, 0);
+		} else {
+			cairo_set_source_rgb(cr, 0.6, 0.6, 0.6);
+		}
+		cairo_move_to(cr, maxx, pos);
+		cairo_line_to(cr, minx, pos);
+		cairo_stroke(cr);
+
+		cairo_save(cr);
+		cairo_move_to(cr, minx, pos);
+		cairo_scale(cr, 1 / zoom, -1 / zoom);
+		cairo_rel_move_to(cr, GRID_LABEL_OFFSET[0], GRID_LABEL_OFFSET[1]);
+		cairo_set_source_rgb(cr, 0, 0, 0);
+
+		stringstream ss;
+		ss << pos;
+		cairo_show_text(cr, ss.str().c_str());
+
+		cairo_rel_move_to(cr, -GRID_LABEL_OFFSET[0], -GRID_LABEL_OFFSET[1]);
+		cairo_stroke(cr);
+		cairo_restore(cr);
+
+		pos += interval;
+	}
+
+	cairo_restore(cr);
 }
 
 void start_draw(cairo_t* cr, double x, double y, double angle) {

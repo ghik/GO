@@ -24,8 +24,8 @@ void Dot::draw(cairo_t *cr) const {
 	beginDraw(cr, x, y, rad(0));
 
 	applyLineColor(cr);
-	cairo_move_to(cr, size, 0);
-	cairo_arc(cr, 0, 0, size, 0, rad(360));
+	cairo_move_to(cr, size/fabs(zoom), 0);
+	cairo_arc(cr, 0, 0, size/fabs(zoom), 0, rad(360));
 	cairo_stroke_preserve(cr);
 
 	applyFillColor(cr);
@@ -43,7 +43,7 @@ void Dot::registerDraggables(vector<Draggable*>& draggables) {
 }
 
 bool Dot::drags(double x, double y) {
-	return dist(this->x, this->y, x, y) <= size;
+	return dist(this->x, this->y, x, y) <= size*zoom;
 }
 
 void Dot::draggedTo(double x, double y) {

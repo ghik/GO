@@ -12,16 +12,35 @@
 #include <gtk/gtk.h>
 #include <cairo/cairo.h>
 #include <ctime>
+#include <cmath>
 
-#define FARAWAY 2000
+#define FARAWAY 5000
+
+const int SCREEN_SIZE = 800;
 
 const double LINE_WIDTH = 1;
 const double POINT_SIZE = 3;
 const double DRAG_RANGE = 5;
+
 const double FONT_SIZE = 14;
 const char* const FONT_FACE = "Arial";
 const double LABEL_OFFSET[2] = { 5, -5 };
+
+const double GRID_FONT_SIZE = 10;
+const char* const GRID_FONT_FACE = "Arial";
+const double GRID_LABEL_OFFSET[2] = { 2, -2 };
+
 const time_t REPAINT_INTERVAL = 100;
+const double BASE_ZOOM_FACTOR = 1.2;
+const double SCREEN_MOVE_AMOUNT = 25;
+const int GRID_SEGMENTS = 20;
+
+const int KEY_ARROW_LEFT = 65361;
+const int KEY_ARROW_UP = 65362;
+const int KEY_ARROW_RIGHT = 65363;
+const int KEY_ARROW_DOWN = 65364;
+
+extern double zoom, centerx, centery;
 
 double rad(double deg);
 double deg(double rad);
@@ -29,9 +48,12 @@ double dist(double x1, double y1, double x2, double y2);
 
 long now();
 
+void screen_to_std(double* x, double* y);
+void screen_to_view(double* x, double* y);
+
 void setColor(double* color, double r, double g, double b, double a);
 void setColor(double* target, const double* color);
-void draw_grid(GtkWidget* widget, cairo_t* cr, int prec);
+void draw_grid(cairo_t* cr);
 void start_draw(cairo_t* cr, double x, double y, double angle);
 void end_draw(cairo_t *cr);
 void put_label(cairo_t *cr, const char* label);

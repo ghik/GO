@@ -56,7 +56,7 @@ SegmentEnd::~SegmentEnd() {
 bool SegmentEnd::drags(double x, double y) {
 	double myx = beg ? seg->x1 : seg->x2;
 	double myy = beg ? seg->y1 : seg->y2;
-	return dist(myx, myy, x, y) <= DRAG_RANGE;
+	return dist(myx, myy, x, y) <= DRAG_RANGE*zoom;
 }
 
 void SegmentEnd::draggedTo(double x, double y) {

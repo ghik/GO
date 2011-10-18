@@ -44,9 +44,13 @@ void Figure::putLabel(cairo_t *cr) const {
 	if (label.length() > 0) {
 		cairo_set_source_rgba(cr, labelColor[0], labelColor[1], labelColor[2],
 				labelColor[3]);
+
+		cairo_save(cr);
+		cairo_scale(cr, 1/zoom, -1/zoom);
 		cairo_rel_move_to(cr, LABEL_OFFSET[0], LABEL_OFFSET[1]);
 		cairo_show_text(cr, label.c_str());
 		cairo_rel_move_to(cr, -LABEL_OFFSET[0], -LABEL_OFFSET[1]);
+		cairo_restore(cr);
 	}
 }
 
