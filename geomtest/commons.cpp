@@ -24,6 +24,10 @@ double dist(double x1, double y1, double x2, double y2) {
 	return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }
 
+double faraway(double x, double y) {
+	return fabs(x+centerx)+fabs(x+centery)+2*SCREEN_SIZE/zoom;
+}
+
 long now() {
 	timeval tv;
 	gettimeofday(&tv, NULL);
@@ -36,12 +40,7 @@ void screen_to_std(double* x, double* y) {
 }
 
 void screen_to_view(double* x, double* y) {
-	cairo_matrix_t mat;
-	cairo_matrix_init_identity(&mat);
-	cairo_matrix_scale(&mat, 1 / zoom, -1 / zoom);
-	cairo_matrix_translate(&mat, -SCREEN_SIZE / 2.0 - centerx,
-			-SCREEN_SIZE / 2.0 + centery);
-	cairo_matrix_transform_point(&mat, x, y);
+	cairo_matrix_transform_point(&revViewMatrix, x, y);
 }
 
 void setColor(double* color, double r, double g, double b, double a) {
@@ -172,8 +171,8 @@ void draw_line(cairo_t* cr, double x, double y, double angle,
 		const char* label) {
 	start_draw(cr, x, y, angle);
 
-	cairo_move_to(cr, -FARAWAY, 0);
-	cairo_line_to(cr, FARAWAY, 0);
+	cairo_move_to(cr, -faraway(x, y), 0);
+	cairo_line_to(cr, faraway(x, y), 0);
 	cairo_move_to(cr, 0, 0);
 
 	put_label(cr, label);
@@ -184,7 +183,7 @@ void draw_halfline(cairo_t* cr, double x, double y, double angle,
 		const char* label) {
 	start_draw(cr, x, y, angle);
 
-	cairo_line_to(cr, FARAWAY, 0);
+	cairo_line_to(cr, faraway(x, y), 0);
 	cairo_move_to(cr, 0, 0);
 
 	put_label(cr, label);

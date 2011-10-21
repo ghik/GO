@@ -43,7 +43,7 @@ void Dot::registerDraggables(vector<Draggable*>& draggables) {
 }
 
 bool Dot::drags(double x, double y) {
-	return dist(this->x, this->y, x, y) <= size*zoom;
+	return dist(this->x, this->y, x, y) <= size/zoom;
 }
 
 void Dot::draggedTo(double x, double y) {

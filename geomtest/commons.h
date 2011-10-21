@@ -14,8 +14,6 @@
 #include <ctime>
 #include <cmath>
 
-#define FARAWAY 5000
-
 const int SCREEN_SIZE = 800;
 
 const double LINE_WIDTH = 1;
@@ -41,10 +39,13 @@ const int KEY_ARROW_RIGHT = 65363;
 const int KEY_ARROW_DOWN = 65364;
 
 extern double zoom, centerx, centery;
+extern cairo_matrix_t revViewMatrix;
+extern double minx, miny, maxx, maxy;
 
 double rad(double deg);
 double deg(double rad);
 double dist(double x1, double y1, double x2, double y2);
+double faraway(double x, double y);
 
 long now();
 

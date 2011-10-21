@@ -8,3 +8,4 @@ hline 300 450 -50 hehehe
 line 200 250 30 lajn
 lineColor 0 1 0 1
 circle 421 534 55 kółko
+polyline 60 30 250 80 700 40 600 600 150 490
