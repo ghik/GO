@@ -37,6 +37,7 @@ const int KEY_ARROW_LEFT = 65361;
 const int KEY_ARROW_UP = 65362;
 const int KEY_ARROW_RIGHT = 65363;
 const int KEY_ARROW_DOWN = 65364;
+const int KEY_BACKSPACE = 65288;
 
 extern double zoom, centerx, centery;
 extern cairo_matrix_t revViewMatrix;

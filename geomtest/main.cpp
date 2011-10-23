@@ -31,6 +31,10 @@ double zoom = 1;
 double centerx = 0;
 double centery = 0;
 
+int frame = 0;
+int maxframe = 0;
+long lastRepaintTime = 0;
+
 cairo_matrix_t revViewMatrix;
 double minx, miny, maxx, maxy;
 
@@ -52,6 +56,7 @@ vector<Figure*>* parseFigures(const char* filename) {
 	double labelColor[4] = { 0, 0, 0, 1 };
 	char buf[1000];
 	string cmd, label;
+	int begframe = 0, endframe = INT_MAX;
 	while (!fin.eof()) {
 		fin.getline(buf, 1000);
 		istringstream ss(buf);
@@ -63,6 +68,11 @@ vector<Figure*>* parseFigures(const char* filename) {
 		} else if (cmd == "labelColor") {
 			ss >> labelColor[0] >> labelColor[1] >> labelColor[2]
 					>> labelColor[3];
+		} else if (cmd == "frames") {
+			ss >> begframe >> endframe;
+			if(endframe > maxframe) {
+				maxframe = endframe;
+			}
 		} else if (cmd == "dot") {
 			Dot* dot = new Dot;
 			ss >> dot->x >> dot->y;
@@ -75,6 +85,8 @@ vector<Figure*>* parseFigures(const char* filename) {
 			if (!ss.eof()) {
 				ss >> dot->label;
 			}
+			dot->begframe = begframe;
+			dot->endframe = endframe;
 			res->push_back(dot);
 			dot->registerDraggables(draggables);
 		} else if (cmd == "line") {
@@ -88,6 +100,8 @@ vector<Figure*>* parseFigures(const char* filename) {
 			if (!ss.eof()) {
 				ss >> line->label;
 			}
+			line->begframe = begframe;
+			line->endframe = endframe;
 			res->push_back(line);
 			line->registerDraggables(draggables);
 		} else if (cmd == "hline") {
@@ -101,6 +115,8 @@ vector<Figure*>* parseFigures(const char* filename) {
 			if (!ss.eof()) {
 				ss >> hline->label;
 			}
+			hline->begframe = begframe;
+			hline->endframe = endframe;
 			res->push_back(hline);
 			hline->registerDraggables(draggables);
 		} else if (cmd == "segment") {
@@ -112,6 +128,8 @@ vector<Figure*>* parseFigures(const char* filename) {
 			if (!ss.eof()) {
 				ss >> seg->label;
 			}
+			seg->begframe = begframe;
+			seg->endframe = endframe;
 			res->push_back(seg);
 			seg->registerDraggables(draggables);
 		} else if (cmd == "polygon") {
@@ -126,6 +144,8 @@ vector<Figure*>* parseFigures(const char* filename) {
 			setColor(polygon->lineColor, lineColor);
 			setColor(polygon->fillColor, fillColor);
 			setColor(polygon->labelColor, labelColor);
+			polygon->begframe = begframe;
+			polygon->endframe = endframe;
 			res->push_back(polygon);
 			polygon->registerDraggables(draggables);
 		} else if (cmd == "polyline") {
@@ -140,6 +160,8 @@ vector<Figure*>* parseFigures(const char* filename) {
 			setColor(polyline->lineColor, lineColor);
 			setColor(polyline->fillColor, fillColor);
 			setColor(polyline->labelColor, labelColor);
+			polyline->begframe = begframe;
+			polyline->endframe = endframe;
 			res->push_back(polyline);
 			polyline->registerDraggables(draggables);
 		} else if (cmd == "circle") {
@@ -151,6 +173,8 @@ vector<Figure*>* parseFigures(const char* filename) {
 			if (!ss.eof()) {
 				ss >> circle->label;
 			}
+			circle->begframe = begframe;
+			circle->endframe = endframe;
 			res->push_back(circle);
 		}
 	}
@@ -201,7 +225,9 @@ void paint(GtkWidget* widget) {
 
 	for (vector<Figure*>::iterator it = figures->begin(); it != figures->end();
 			it++) {
-		(*it)->draw(cr);
+		if(frame >= (*it)->begframe && frame <= (*it)->endframe) {
+			(*it)->draw(cr);
+		}
 	}
 }
 
@@ -269,8 +295,6 @@ bool button_release(GtkWidget* widget, GdkEvent* event, gpointer data) {
 }
 
 bool motion_notify(GtkWidget* widget, GdkEvent* event, gpointer data) {
-	static long lastRepaintTime = 0;
-
 	double x = event->button.x, y = event->button.y;
 	screen_to_view(&x, &y);
 
@@ -280,18 +304,22 @@ bool motion_notify(GtkWidget* widget, GdkEvent* event, gpointer data) {
 	update_position_label(x, y);
 
 	long nowTime = now();
-	if (dragged != NULL && nowTime - lastRepaintTime > REPAINT_INTERVAL) {
-		lastRepaintTime = nowTime;
+	if (dragged != NULL) {
 		dragged->draggedTo(x, y);
-		gtk_widget_queue_draw(drawingArea);
+		if(nowTime - lastRepaintTime > REPAINT_INTERVAL) {
+			gtk_widget_queue_draw(drawingArea);
+			lastRepaintTime = nowTime;
+		}
 	}
-	if (draggingScreen && nowTime - lastRepaintTime > REPAINT_INTERVAL) {
-		lastRepaintTime = nowTime;
+	if (draggingScreen) {
 		update_view_params(zoom, centerx + (sx - dragScreenBegx),
 				centery + (sy - dragScreenBegy));
 		dragScreenBegx = sx;
 		dragScreenBegy = sy;
-		gtk_widget_queue_draw(drawingArea);
+		if(nowTime - lastRepaintTime > REPAINT_INTERVAL) {
+			gtk_widget_queue_draw(drawingArea);
+			lastRepaintTime = nowTime;
+		}
 	}
 	return true;
 }
@@ -312,6 +340,7 @@ bool scroll(GtkWidget* widget, GdkEvent* event, gpointer data) {
 	screen_to_std(&x, &y);
 	update_view_params(zoom * factor, x + factor * (centerx - x),
 			y + factor * (centery - y));
+
 	gtk_widget_queue_draw(drawingArea);
 
 	return true;
@@ -331,7 +360,16 @@ bool key_press(GtkWidget* widget, GdkEvent* event, gpointer data) {
 	case KEY_ARROW_DOWN:
 		update_view_params(zoom, centerx, centery - SCREEN_MOVE_AMOUNT);
 		break;
+	case ' ':
+		frame = (frame+1)%(maxframe+1);
+		gtk_widget_queue_draw(drawingArea);
+		return true;
+	case KEY_BACKSPACE:
+		frame = (maxframe+frame)%(maxframe+1);
+		gtk_widget_queue_draw(drawingArea);
+		return true;
 	default:
+		cout << "Key " << event->key.keyval << endl;
 		break;
 	}
 
@@ -381,10 +419,15 @@ int main(int argc, char *argv[]) {
 	gdk_window_set_events(gtk_widget_get_window(drawingArea),
 			GDK_ALL_EVENTS_MASK);
 
-	figures = parseFigures("figures.txt");
+	figures = parseFigures("segments.txt");
 	update_view_params(zoom, centerx, centery);
 
 	gtk_main();
+
+	for(vector<Figure*>::iterator it=figures->begin();it!=figures->end();it++) {
+		delete *it;
+	}
+	delete figures;
 
 	return 0;
 }

@@ -40,6 +40,8 @@ public:
 	double lineColor[4];
 	double fillColor[4];
 	double labelColor[4];
+	int begframe;
+	int endframe;
 
 private:
 	GtkWidget* widget;

@@ -14,7 +14,7 @@
 using namespace std;
 
 Figure::Figure() :
-		widget(NULL) {
+		begframe(0), endframe(INT_MAX), widget(NULL) {
 	setColor(lineColor, 0, 0, 0, 1);
 	setColor(labelColor, 0, 0, 0, 1);
 	setColor(fillColor, 1, 1, 1, 0);
