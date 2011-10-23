@@ -179,10 +179,6 @@ vector<Figure*>* parseFigures(const char* filename) {
 		}
 	}
 
-	for (vector<Figure*>::iterator it = res->begin(); it != res->end(); it++) {
-		cout << **it;
-	}
-
 	return res;
 }
 
@@ -225,7 +221,7 @@ void paint(GtkWidget* widget) {
 
 	for (vector<Figure*>::iterator it = figures->begin(); it != figures->end();
 			it++) {
-		if(frame >= (*it)->begframe && frame <= (*it)->endframe) {
+		if(frame >= (*it)->begframe && ((*it)->endframe < 0 || frame <= (*it)->endframe)) {
 			(*it)->draw(cr);
 		}
 	}

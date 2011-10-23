@@ -109,6 +109,9 @@ vector<Intersection> isections;
 double sweep = 0;
 Segment *isectSeg1 = NULL, *isectSeg2 = NULL;
 
+ofstream fout;
+int frame = 0;
+
 bool Point::ComparePtr::operator()(Point* p1, Point* p2) {
 	if (p1->x == p2->x) {
 		return p1->type() < p2->type();
@@ -241,6 +244,12 @@ Point* intersection_event(Segment& seg1, Segment& seg2) {
 			double isy = isection_y(seg1, seg2);
 			Point* isection = new Point(isx, isy);
 			isection->seg = &seg1;
+
+			fout << "frames " << frame << " -1" << endl;
+			fout << "lineColor 0.2 0.6 0.1 1" << endl;
+			fout << "fillColor 0.2 0.6 0.1 1" << endl;
+			fout << "dot " << isx << ' ' << isy << " 2" << endl;
+
 			return isection;
 		}
 	}
@@ -259,7 +268,7 @@ void dump_scene(const char* filename, SegmentTree& T, int scene) {
 	fout << "lineColor 1 0 0 1" << endl;
 	fout << "line " << sweep << ' ' << 0 << ' ' << 90 << endl;
 	for (vector<Segment>::iterator it = segs.begin(); it != segs.end(); it++) {
-		if (T.search(&*it)->valid()) {
+		if (T.find(&*it)->valid()) {
 			fout << "lineColor 0 0 1 1" << endl;
 		} else {
 			fout << "lineColor 0 0 0 1" << endl;
@@ -284,6 +293,8 @@ int main(int argc, char** argv) {
 	}
 	fin.close();
 
+	fout.open("../geomtest/segments.txt");
+
 	priority_queue<Point*, vector<Point*>, Point::ComparePtr> Q;
 	SegmentTree T;
 
@@ -293,12 +304,9 @@ int main(int argc, char** argv) {
 	}
 
 	sweep = Q.top()->x;
-	//int scene = 0;
 	while (!Q.empty()) {
 		Point* event = Q.top();
 		Q.pop();
-
-		//cout << event->type() << ' ' << *event << endl;
 
 		isectSeg1 = NULL;
 		isectSeg2 = NULL;
@@ -307,6 +315,7 @@ int main(int argc, char** argv) {
 		switch (event->type()) {
 		case BEG:
 			sweep = event->x;
+			event->seg->treein = frame;
 			it = event->seg->it = T.create(event->seg)->insert();
 			pit = it->predecessor();
 			nit = it->successor();
@@ -327,6 +336,7 @@ int main(int argc, char** argv) {
 			}
 			break;
 		case END:
+			event->seg->treeout = frame;
 			it = event->seg->it;
 			pit = it->predecessor();
 			nit = it->successor();
@@ -386,39 +396,28 @@ int main(int argc, char** argv) {
 			break;
 		}
 
-		/*
-		for(SegmentTree::PNode n=T.first();n->valid();n=n->successor()) {
-			cout << n->value()->getSweepY() << ' ' << *n->value() << endl;
-			if(n->predecessor()->valid() && n->value()->getSweepY() < n->predecessor()->value()->getSweepY()) {
-				cout << "NOOOOOOOOOO!\n";
-			}
-		}
-		*/
 
-		//dump_scene("../geomtest/segments.txt", T, scene++);
+		fout << "frames " << frame << ' ' << frame << endl;
+		fout << "lineColor 1 0 0 1" << endl;
+		fout << "line " << sweep << " 0 90" << endl;
+
+		frame++;
 	}
 
-	/*
-	int is = 0;
-	for (int i = 0; i < n; i++) {
-		for (int j = i + 1; j < n; j++) {
-			if (intersect(segs[i], segs[j])) {
-				Intersection isc(&segs[i], &segs[j]);
-				bool found = false;
-				for (vector<Intersection>::iterator it = isections.begin();
-						it != isections.end(); it++) {
-					found = found || (*it == isc);
-				}
-				if (!found) {
-					cout << isc << endl;
-				}
-				is++;
-			}
-		}
-	}
-	*/
+	for(vector<Segment>::iterator it=segs.begin();it!=segs.end();it++) {
+		fout << "frames 0 " << it->treein-1 << endl;
+		fout << "lineColor 0 0 0 1" << endl;
+		fout << "segment " << it->beg.x << ' ' << it->beg.y << ' ' << it->end.x << ' ' << it->end.y << endl;
 
-	cout << isections.size() << endl;
+		fout << "frames " << it->treein << ' ' << it->treeout-1 << endl;
+		fout << "lineColor 0 0 1 1" << endl;
+		fout << "segment " << it->beg.x << ' ' << it->beg.y << ' ' << it->end.x << ' ' << it->end.y << endl;
+
+		fout << "frames " << it->treeout << ' ' << frame << endl;
+		fout << "lineColor 0 0 0 1" << endl;
+		fout << "segment " << it->beg.x << ' ' << it->beg.y << ' ' << it->end.x << ' ' << it->end.y << endl;
+	}
+	fout.close();
 
 	return 0;
 }

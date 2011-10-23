@@ -41,8 +41,8 @@ int main(int argc, char** argv) {
 
 	fout.open("../geomtest/segments.txt");
 	raw.open("../lab3/raw_segments.txt");
-	raw << 1000 << endl;
-	for (int i = 0; i < 1000; i++) {
+	raw << 50 << endl;
+	for (int i = 0; i < 50; i++) {
 		double x1, y1, x2, y2;
 		rand_area(-4000, -4000, 4000, 4000, &x1, &y1);
 		rand_area(-4000, -4000, 4000, 4000, &x2, &y2);
