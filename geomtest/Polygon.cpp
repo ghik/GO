@@ -8,32 +8,32 @@
 #include "commons.h"
 #include "Polygon.h"
 
-Polygon::Polygon() {
+Polygon::Polygon(): nVerts(0) {
 }
 
 Polygon::Polygon(double* _verts, int _nVerts) :
 		nVerts(_nVerts) {
-	verts = new double[nVerts];
 	for (int i = 0; i < nVerts; i++) {
-		verts[2 * i] = _verts[2 * i];
-		verts[2 * i + 1] = _verts[2 * i + 1];
+		verts.push_back(_verts[2 * i]);
+		verts.push_back(_verts[2 * i + 1]);
 	}
 }
 
 Polygon::Polygon(const std::vector<double>& points) :
 		nVerts(points.size() / 2) {
-	verts = new double[points.size()];
 	for (int i = 0; i < nVerts; i++) {
-		verts[2 * i] = points[2 * i];
-		verts[2 * i + 1] = points[2 * i + 1];
+		verts.push_back(points[2 * i]);
+		verts.push_back(points[2 * i + 1]);
 	}
 }
 
 Polygon::~Polygon() {
-	delete[] verts;
 }
 
 void Polygon::draw(cairo_t *cr) const {
+	if(nVerts < 3) {
+		return;
+	}
 	beginDraw(cr, 0, 0, 0);
 
 	applyLineColor(cr);
@@ -63,6 +63,12 @@ void Polygon::registerDraggables(vector<Draggable*> & draggables) {
 	for(int i=0;i<nVerts;i++) {
 		draggables.push_back(new PolygonVertex(this, i));
 	}
+}
+
+void Polygon::addPoint(double x, double y) {
+	verts.push_back(x);
+	verts.push_back(y);
+	nVerts++;
 }
 
 PolygonVertex::PolygonVertex(Polygon *_polygon, int _vertex): polygon(_polygon), vertex(_vertex) {

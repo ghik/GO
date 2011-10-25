@@ -22,8 +22,9 @@ public:
 	virtual ostream& serialize(ostream& str) const;
 
 	virtual void registerDraggables(vector<Draggable*>& draggables);
+	virtual void addPoint(double x, double y);
 
-	double* verts;
+	std::vector<double> verts;
 	int nVerts;
 };
 

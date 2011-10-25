@@ -13,27 +13,27 @@ Polyline::Polyline() {
 
 Polyline::Polyline(double* _verts, int _nVerts) :
 		nVerts(_nVerts) {
-	verts = new double[nVerts];
 	for (int i = 0; i < nVerts; i++) {
-		verts[2 * i] = _verts[2 * i];
-		verts[2 * i + 1] = _verts[2 * i + 1];
+		verts.push_back(_verts[2 * i]);
+		verts.push_back(_verts[2 * i + 1]);
 	}
 }
 
 Polyline::Polyline(const std::vector<double>& points) :
 		nVerts(points.size() / 2) {
-	verts = new double[points.size()];
 	for (int i = 0; i < nVerts; i++) {
-		verts[2 * i] = points[2 * i];
-		verts[2 * i + 1] = points[2 * i + 1];
+		verts.push_back(points[2 * i]);
+		verts.push_back(points[2 * i + 1]);
 	}
 }
 
 Polyline::~Polyline() {
-	delete[] verts;
 }
 
 void Polyline::draw(cairo_t *cr) const {
+	if(nVerts < 2) {
+		return;
+	}
 	beginDraw(cr, 0, 0, 0);
 
 	applyLineColor(cr);

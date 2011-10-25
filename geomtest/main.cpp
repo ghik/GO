@@ -24,6 +24,8 @@ GtkWidget *window = NULL, *drawingArea = NULL, *posLabel = NULL;
 bool draggingScreen = false;
 double dragScreenBegx, dragScreenBegy;
 
+Polygon* paintedPolygon = NULL;
+
 vector<Figure*>* figures = NULL;
 vector<Draggable*> draggables;
 Draggable* dragged = NULL;
@@ -70,7 +72,7 @@ vector<Figure*>* parseFigures(const char* filename) {
 					>> labelColor[3];
 		} else if (cmd == "frames") {
 			ss >> begframe >> endframe;
-			if(endframe > maxframe) {
+			if (endframe > maxframe) {
 				maxframe = endframe;
 			}
 		} else if (cmd == "dot") {
@@ -221,7 +223,8 @@ void paint(GtkWidget* widget) {
 
 	for (vector<Figure*>::iterator it = figures->begin(); it != figures->end();
 			it++) {
-		if(frame >= (*it)->begframe && ((*it)->endframe < 0 || frame <= (*it)->endframe)) {
+		if (frame >= (*it)->begframe
+				&& ((*it)->endframe < 0 || frame <= (*it)->endframe)) {
 			(*it)->draw(cr);
 		}
 	}
@@ -241,9 +244,11 @@ bool button_press(GtkWidget* widget, GdkEvent* event, gpointer data) {
 
 	switch (event->button.button) {
 	case 1:
-		draggingScreen = true;
-		dragScreenBegx = sx;
-		dragScreenBegy = sy;
+		if (paintedPolygon == NULL) {
+			draggingScreen = true;
+			dragScreenBegx = sx;
+			dragScreenBegy = sy;
+		}
 		break;
 	case 3:
 		for (vector<Draggable*>::iterator it = draggables.begin();
@@ -271,9 +276,13 @@ bool button_release(GtkWidget* widget, GdkEvent* event, gpointer data) {
 
 	switch (event->button.button) {
 	case 1:
-		draggingScreen = false;
-		update_view_params(zoom, centerx + (sx - dragScreenBegx),
-				centery + (sy - dragScreenBegy));
+		if (paintedPolygon != NULL) {
+			paintedPolygon->addPoint(x, y);
+		} else {
+			draggingScreen = false;
+			update_view_params(zoom, centerx + (sx - dragScreenBegx),
+					centery + (sy - dragScreenBegy));
+		}
 		gtk_widget_queue_draw(drawingArea);
 		break;
 	case 3:
@@ -302,7 +311,7 @@ bool motion_notify(GtkWidget* widget, GdkEvent* event, gpointer data) {
 	long nowTime = now();
 	if (dragged != NULL) {
 		dragged->draggedTo(x, y);
-		if(nowTime - lastRepaintTime > REPAINT_INTERVAL) {
+		if (nowTime - lastRepaintTime > REPAINT_INTERVAL) {
 			gtk_widget_queue_draw(drawingArea);
 			lastRepaintTime = nowTime;
 		}
@@ -312,7 +321,7 @@ bool motion_notify(GtkWidget* widget, GdkEvent* event, gpointer data) {
 				centery + (sy - dragScreenBegy));
 		dragScreenBegx = sx;
 		dragScreenBegy = sy;
-		if(nowTime - lastRepaintTime > REPAINT_INTERVAL) {
+		if (nowTime - lastRepaintTime > REPAINT_INTERVAL) {
 			gtk_widget_queue_draw(drawingArea);
 			lastRepaintTime = nowTime;
 		}
@@ -343,36 +352,52 @@ bool scroll(GtkWidget* widget, GdkEvent* event, gpointer data) {
 }
 
 bool key_press(GtkWidget* widget, GdkEvent* event, gpointer data) {
+	bool updatePositionLabel = false;
+
 	switch (event->key.keyval) {
 	case KEY_ARROW_LEFT:
 		update_view_params(zoom, centerx - SCREEN_MOVE_AMOUNT, centery);
+		updatePositionLabel = true;
 		break;
 	case KEY_ARROW_UP:
 		update_view_params(zoom, centerx, centery + SCREEN_MOVE_AMOUNT);
+		updatePositionLabel = true;
 		break;
 	case KEY_ARROW_RIGHT:
 		update_view_params(zoom, centerx + SCREEN_MOVE_AMOUNT, centery);
+		updatePositionLabel = true;
 		break;
 	case KEY_ARROW_DOWN:
 		update_view_params(zoom, centerx, centery - SCREEN_MOVE_AMOUNT);
+		updatePositionLabel = true;
 		break;
 	case ' ':
-		frame = (frame+1)%(maxframe+1);
-		gtk_widget_queue_draw(drawingArea);
-		return true;
+		frame = (frame + 1) % (maxframe + 1);
+		break;
 	case KEY_BACKSPACE:
-		frame = (maxframe+frame)%(maxframe+1);
-		gtk_widget_queue_draw(drawingArea);
-		return true;
+		frame = (maxframe + frame) % (maxframe + 1);
+		break;
+	case 'p':
+	case 'P':
+		if (paintedPolygon == NULL) {
+			paintedPolygon = new Polygon();
+			figures->push_back(paintedPolygon);
+		} else {
+			paintedPolygon->registerDraggables(draggables);
+			paintedPolygon = NULL;
+		}
+		break;
 	default:
 		cout << "Key " << event->key.keyval << endl;
 		break;
 	}
 
-	double x, y;
-	current_position(&x, &y);
-	screen_to_view(&x, &y);
-	update_position_label(x, y);
+	if (updatePositionLabel) {
+		double x, y;
+		current_position(&x, &y);
+		screen_to_view(&x, &y);
+		update_position_label(x, y);
+	}
 
 	gtk_widget_queue_draw(drawingArea);
 	return true;
@@ -415,12 +440,13 @@ int main(int argc, char *argv[]) {
 	gdk_window_set_events(gtk_widget_get_window(drawingArea),
 			GDK_ALL_EVENTS_MASK);
 
-	figures = parseFigures("segments.txt");
+	figures = parseFigures("figures.txt");
 	update_view_params(zoom, centerx, centery);
 
 	gtk_main();
 
-	for(vector<Figure*>::iterator it=figures->begin();it!=figures->end();it++) {
+	for (vector<Figure*>::iterator it = figures->begin(); it != figures->end();
+			it++) {
 		delete *it;
 	}
 	delete figures;

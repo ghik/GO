@@ -23,7 +23,7 @@ public:
 
 	virtual void registerDraggables(vector<Draggable*>& draggables);
 
-	double* verts;
+	std::vector<double> verts;
 	int nVerts;
 };
 
