@@ -61,9 +61,9 @@ void draw_grid(cairo_t* cr) {
 			CAIRO_FONT_WEIGHT_NORMAL);
 	cairo_set_font_size(cr, GRID_FONT_SIZE);
 
-	double minx = 0, miny = SCREEN_SIZE, maxx = SCREEN_SIZE, maxy = 0;
-	screen_to_view(&minx, &miny);
-	screen_to_view(&maxx, &maxy);
+    double minx, maxx, miny, maxy;
+    cairo_clip_extents(cr, &minx, &miny, &maxx, &maxy);
+
 	double width = maxx - minx, interval = 1;
 
 	if (width / interval > GRID_SEGMENTS) {
