@@ -23,7 +23,7 @@ struct Point;
 struct Segment;
 
 enum PointType {
-	BEG, END, ISECT, FREE
+	END, BEG, ISECT, FREE
 };
 
 double isection_x(const Segment& seg1, const Segment& seg2);
@@ -35,18 +35,18 @@ struct Point {
 	};
 
 	Point() :
-			x(0), y(0), seg(NULL) {
+			x(0), y(0), seg(NULL), type(FREE) {
 	}
 	Point(double _x, double _y) :
-			x(_x), y(_y), seg(NULL) {
+			x(_x), y(_y), seg(NULL), type(FREE) {
 	}
 	bool operator==(const Point& rhs) {
-		return x == rhs.x && y == rhs.y && seg == rhs.seg;
+		return x == rhs.x && y == rhs.y && seg == rhs.seg && type == rhs.type;
 	}
 	double x;
 	double y;
 	Segment* seg;
-	PointType type();
+	PointType type;
 };
 
 struct Segment {
@@ -56,6 +56,8 @@ struct Segment {
 
 	Segment() {
 		beg.seg = end.seg = this;
+		beg.type = BEG;
+		end.type = END;
 	}
 	Segment(const Point& _beg, const Point& _end) :
 			beg(_beg), end(_end) {
@@ -70,6 +72,8 @@ struct Segment {
 	void norm() {
 		if (beg.x > end.x) {
 			swap(beg, end);
+			beg.type = BEG;
+			end.type = END;
 		}
 	}
 	double getSweepY() const;
@@ -114,22 +118,9 @@ int frame = 0;
 
 bool Point::ComparePtr::operator()(Point* p1, Point* p2) {
 	if (p1->x == p2->x) {
-		return p1->type() < p2->type();
+		return p1->type < p2->type;
 	}
 	return p1->x > p2->x;
-}
-
-PointType Point::type() {
-	if (seg == NULL) {
-		return FREE;
-	}
-	if (&seg->beg == this) {
-		return BEG;
-	}
-	if (&seg->end == this) {
-		return END;
-	}
-	return ISECT;
 }
 
 double Segment::getSweepY() const {
@@ -244,6 +235,7 @@ Point* intersection_event(Segment& seg1, Segment& seg2) {
 			double isy = isection_y(seg1, seg2);
 			Point* isection = new Point(isx, isy);
 			isection->seg = &seg1;
+			isection->type = ISECT;
 
 			fout << "frames " << frame << " -1" << endl;
 			fout << "lineColor 0.2 0.6 0.1 1" << endl;
@@ -312,7 +304,7 @@ int main(int argc, char** argv) {
 		isectSeg2 = NULL;
 
 		SegmentTree::PNode it, pit, nit, nnit;
-		switch (event->type()) {
+		switch (event->type) {
 		case BEG:
 			sweep = event->x;
 			event->seg->treein = frame;
@@ -395,7 +387,6 @@ int main(int argc, char** argv) {
 		default:
 			break;
 		}
-
 
 		fout << "frames " << frame << ' ' << frame << endl;
 		fout << "lineColor 1 0 0 1" << endl;
