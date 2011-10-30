@@ -21,9 +21,8 @@ Line::~Line() {
 void Line::draw(cairo_t *cr) const {
 	beginDraw(cr, 0, 0, 0);
 
-	double minx = 0, maxx = SCREEN_SIZE, miny = SCREEN_SIZE, maxy = 0;
-	screen_to_view(&minx, &miny);
-	screen_to_view(&maxx, &maxy);
+    double minx, maxx, miny, maxy;
+    cairo_clip_extents(cr, &minx, &miny, &maxx, &maxy);
 
 	double vx = cos(dirAngle), vy = sin(dirAngle);
 	double al, ar, au, ad, ly, ry, ux, dx;

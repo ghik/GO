@@ -353,6 +353,9 @@ bool key_press(GtkWidget* widget, GdkEvent* event, gpointer data) {
 		update_view_params(zoom, centerx, centery - SCREEN_MOVE_AMOUNT);
 		updatePositionLabel = true;
 		break;
+	case KEY_ESC:
+	    gtk_main_quit();
+	    break;
 	case ' ':
 		frame = (frame + 1) % (maxframe + 1);
 		break;
