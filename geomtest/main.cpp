@@ -3,6 +3,7 @@
 #include <cairo/cairo.h>
 #include <cmath>
 #include <cstdlib>
+#include <cstring>
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -21,24 +22,26 @@ using namespace std;
 #include "Circle.h"
 
 GtkWidget *window = NULL, *drawingArea = NULL, *posLabel = NULL;
-bool draggingScreen = false;
-double dragScreenBegx, dragScreenBegy;
 
-Polygon* paintedPolygon = NULL;
+GStaticMutex mutex = G_STATIC_MUTEX_INIT;
 
 vector<Figure*>* figures = NULL;
 vector<Draggable*> draggables;
+
 Draggable* dragged = NULL;
+Polygon* paintedPolygon = NULL;
+bool draggingScreen = false;
+double dragScreenBegx, dragScreenBegy;
+
 double zoom = 1;
 double centerx = 0;
 double centery = 0;
+cairo_matrix_t revViewMatrix;
+double minx, miny, maxx, maxy;
 
 int frame = 0;
 int maxframe = 0;
 long lastRepaintTime = 0;
-
-cairo_matrix_t revViewMatrix;
-double minx, miny, maxx, maxy;
 
 void update_view_params(double _zoom, double _cx, double _cy) {
 	zoom = _zoom;
@@ -48,6 +51,73 @@ void update_view_params(double _zoom, double _cx, double _cy) {
 	cairo_matrix_scale(&revViewMatrix, 1 / zoom, -1 / zoom);
 	cairo_matrix_translate(&revViewMatrix, -SCREEN_SIZE / 2.0 - centerx,
 			-SCREEN_SIZE / 2.0 + centery);
+}
+
+Figure* parseFigure(const string& fig, istringstream& str) {
+	if (fig == "dot") {
+		Dot* dot = new Dot;
+		str >> dot->x >> dot->y;
+		if (!str.eof()) {
+			str >> dot->size;
+		}
+		if (!str.eof()) {
+			str >> dot->label;
+		}
+		return dot;
+	} else if (fig == "line") {
+		double angle;
+		Line* line = new Line;
+		str >> line->begx >> line->begy >> angle;
+		line->dirAngle = rad(angle);
+		if (!str.eof()) {
+			str >> line->label;
+		}
+		return line;
+	} else if (fig == "hline") {
+		double angle;
+		HalfLine* hline = new HalfLine();
+		str >> hline->begx >> hline->begy >> angle;
+		hline->dirAngle = rad(angle);
+		if (!str.eof()) {
+			str >> hline->label;
+		}
+		return hline;
+	} else if (fig == "segment") {
+		Segment* seg = new Segment();
+		str >> seg->x1 >> seg->y1 >> seg->x2 >> seg->y2;
+		if (!str.eof()) {
+			str >> seg->label;
+		}
+		return seg;
+	} else if (fig == "polygon") {
+		vector<double> points;
+		while (!str.eof()) {
+			double x, y;
+			str >> x >> y;
+			points.push_back(x);
+			points.push_back(y);
+		}
+		Polygon* polygon = new Polygon(points);
+		return polygon;
+	} else if (fig == "polyline") {
+		vector<double> points;
+		while (!str.eof()) {
+			double x, y;
+			str >> x >> y;
+			points.push_back(x);
+			points.push_back(y);
+		}
+		Polyline* polyline = new Polyline(points);
+		return polyline;
+	} else if (fig == "circle") {
+		Circle* circle = new Circle;
+		str >> circle->cx >> circle->cy >> circle->r;
+		if (!str.eof()) {
+			str >> circle->label;
+		}
+		return circle;
+	}
+	return NULL;
 }
 
 vector<Figure*>* parseFigures(const char* filename) {
@@ -75,109 +145,17 @@ vector<Figure*>* parseFigures(const char* filename) {
 			if (endframe > maxframe) {
 				maxframe = endframe;
 			}
-		} else if (cmd == "dot") {
-			Dot* dot = new Dot;
-			ss >> dot->x >> dot->y;
-			setColor(dot->lineColor, lineColor);
-			setColor(dot->fillColor, fillColor);
-			setColor(dot->labelColor, labelColor);
-			if (!ss.eof()) {
-				ss >> dot->size;
+		} else {
+			Figure* fig = parseFigure(cmd, ss);
+			if(fig != NULL) {
+				setColor(fig->lineColor, lineColor);
+				setColor(fig->fillColor, fillColor);
+				setColor(fig->labelColor, labelColor);
+				fig->begframe = begframe;
+				fig->endframe = endframe;
+				res->push_back(fig);
+				fig->registerDraggables(draggables);
 			}
-			if (!ss.eof()) {
-				ss >> dot->label;
-			}
-			dot->begframe = begframe;
-			dot->endframe = endframe;
-			res->push_back(dot);
-			dot->registerDraggables(draggables);
-		} else if (cmd == "line") {
-			double angle;
-			Line* line = new Line;
-			ss >> line->begx >> line->begy >> angle;
-			line->dirAngle = rad(angle);
-			setColor(line->lineColor, lineColor);
-			setColor(line->fillColor, fillColor);
-			setColor(line->labelColor, labelColor);
-			if (!ss.eof()) {
-				ss >> line->label;
-			}
-			line->begframe = begframe;
-			line->endframe = endframe;
-			res->push_back(line);
-			line->registerDraggables(draggables);
-		} else if (cmd == "hline") {
-			double angle;
-			HalfLine* hline = new HalfLine();
-			ss >> hline->begx >> hline->begy >> angle;
-			hline->dirAngle = rad(angle);
-			setColor(hline->lineColor, lineColor);
-			setColor(hline->fillColor, fillColor);
-			setColor(hline->labelColor, labelColor);
-			if (!ss.eof()) {
-				ss >> hline->label;
-			}
-			hline->begframe = begframe;
-			hline->endframe = endframe;
-			res->push_back(hline);
-			hline->registerDraggables(draggables);
-		} else if (cmd == "segment") {
-			Segment* seg = new Segment();
-			ss >> seg->x1 >> seg->y1 >> seg->x2 >> seg->y2;
-			setColor(seg->lineColor, lineColor);
-			setColor(seg->fillColor, fillColor);
-			setColor(seg->labelColor, labelColor);
-			if (!ss.eof()) {
-				ss >> seg->label;
-			}
-			seg->begframe = begframe;
-			seg->endframe = endframe;
-			res->push_back(seg);
-			seg->registerDraggables(draggables);
-		} else if (cmd == "polygon") {
-			vector<double> points;
-			while (!ss.eof()) {
-				double x, y;
-				ss >> x >> y;
-				points.push_back(x);
-				points.push_back(y);
-			}
-			Polygon* polygon = new Polygon(points);
-			setColor(polygon->lineColor, lineColor);
-			setColor(polygon->fillColor, fillColor);
-			setColor(polygon->labelColor, labelColor);
-			polygon->begframe = begframe;
-			polygon->endframe = endframe;
-			res->push_back(polygon);
-			polygon->registerDraggables(draggables);
-		} else if (cmd == "polyline") {
-			vector<double> points;
-			while (!ss.eof()) {
-				double x, y;
-				ss >> x >> y;
-				points.push_back(x);
-				points.push_back(y);
-			}
-			Polyline* polyline = new Polyline(points);
-			setColor(polyline->lineColor, lineColor);
-			setColor(polyline->fillColor, fillColor);
-			setColor(polyline->labelColor, labelColor);
-			polyline->begframe = begframe;
-			polyline->endframe = endframe;
-			res->push_back(polyline);
-			polyline->registerDraggables(draggables);
-		} else if (cmd == "circle") {
-			Circle* circle = new Circle;
-			ss >> circle->cx >> circle->cy >> circle->r;
-			setColor(circle->lineColor, lineColor);
-			setColor(circle->fillColor, fillColor);
-			setColor(circle->labelColor, labelColor);
-			if (!ss.eof()) {
-				ss >> circle->label;
-			}
-			circle->begframe = begframe;
-			circle->endframe = endframe;
-			res->push_back(circle);
 		}
 	}
 
@@ -198,6 +176,8 @@ void current_position(double* x, double* y) {
 }
 
 void paint(GtkWidget* widget) {
+	g_static_mutex_lock(&mutex);
+
 	cairo_t* cr = gdk_cairo_create(gtk_widget_get_window(widget));
 
 	cairo_translate(cr, SCREEN_SIZE / 2.0 + centerx,
@@ -228,6 +208,8 @@ void paint(GtkWidget* widget) {
 			(*it)->draw(cr);
 		}
 	}
+
+	g_static_mutex_unlock(&mutex);
 }
 
 bool expose(GtkWidget* widget, GdkEvent* event, gpointer data) {
@@ -403,6 +385,25 @@ bool key_press(GtkWidget* widget, GdkEvent* event, gpointer data) {
 	return true;
 }
 
+gpointer shell(gpointer data) {
+	char buf[10000];
+	while(!cin.eof()) {
+		cout.put('>');
+		cin.getline(buf, 10000);
+
+		if(strlen(buf) == 0) {
+			continue;
+		}
+
+		g_static_mutex_lock(&mutex);
+
+		cout << "Executing command...\n";
+
+		g_static_mutex_unlock(&mutex);
+	}
+	return NULL;
+}
+
 int main(int argc, char *argv[]) {
 	GtkWidget *vbox;
 
@@ -442,6 +443,8 @@ int main(int argc, char *argv[]) {
 
 	figures = parseFigures("figures.txt");
 	update_view_params(zoom, centerx, centery);
+
+	g_thread_create(shell, NULL, false, NULL);
 
 	gtk_main();
 
