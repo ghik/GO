@@ -41,6 +41,10 @@ ostream & Circle::serialize(ostream & str) const {
 	return str;
 }
 
+ostream& Circle::raw_serialize(ostream& str) const {
+	return str << cx << ' ' << cy << ' ' << r << endl;
+}
+
 void Circle::registerDraggables(std::vector<Draggable*> & draggables) {
 }
 

@@ -34,6 +34,7 @@ public:
 	virtual void registerDraggables(std::vector<Draggable*>& draggables) = 0;
 	virtual void draw(cairo_t* cr) const = 0;
 	virtual ostream& serialize(ostream& str) const = 0;
+	virtual ostream& raw_serialize(ostream& ostr) const = 0;
 	void setWidget(GtkWidget* widget);
 
 	string label;

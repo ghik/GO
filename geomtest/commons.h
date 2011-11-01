@@ -14,7 +14,7 @@
 #include <ctime>
 #include <cmath>
 
-const int SCREEN_SIZE = 800;
+const int SCREEN_SIZE = 600;
 
 const double LINE_WIDTH = 1;
 const double POINT_SIZE = 3;

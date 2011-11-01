@@ -55,6 +55,14 @@ ostream& Polyline::serialize(ostream& str) const {
 	return str;
 }
 
+ostream& Polyline::raw_serialize(ostream& str) const {
+	str << nVerts << ' ';
+	for(int i=0;i<nVerts*2;i++) {
+		str << verts[i] << ' ';
+	}
+	return str << endl;
+}
+
 void Polyline::registerDraggables(vector<Draggable*> & draggables) {
 	for(int i=0;i<nVerts;i++) {
 		draggables.push_back(new PolylineVertex(this, i));

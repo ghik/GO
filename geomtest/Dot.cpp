@@ -55,3 +55,7 @@ ostream& Dot::serialize(ostream& str) const {
 	str << "dot " << x << " " << y << " " << size << ' ' << label << endl;
 	return str;
 }
+
+ostream& Dot::raw_serialize(ostream& str) const {
+	return str << x << ' ' << y << endl;
+}

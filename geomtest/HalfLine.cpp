@@ -81,6 +81,10 @@ ostream& HalfLine::serialize(ostream& str) const {
 	return str;
 }
 
+ostream& HalfLine::raw_serialize(ostream& str) const {
+	return str << begx << " " << begy << " " << deg(dirAngle) << endl;
+}
+
 void HalfLine::registerDraggables(vector<Draggable*> & draggables) {
 	draggables.push_back(this);
 }

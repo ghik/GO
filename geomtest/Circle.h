@@ -19,6 +19,7 @@ public:
 
 	virtual void draw(cairo_t* cr) const;
 	virtual ostream& serialize(ostream& str) const;
+	virtual ostream& raw_serialize(ostream& str) const;
 
 	virtual void registerDraggables(std::vector<Draggable*>& draggables);
 

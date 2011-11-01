@@ -55,8 +55,15 @@ ostream& Polygon::serialize(ostream& str) const {
 	for (int i = 0; i < nVerts * 2; i++) {
 		str << verts[i] << " ";
 	}
-	str << endl;
-	return str;
+	return str << endl;
+}
+
+ostream& Polygon::raw_serialize(ostream& str) const {
+	str << nVerts << ' ';
+	for(int i=0;i<nVerts*2;i++) {
+		str << verts[i] << ' ';
+	}
+	return str << endl;
 }
 
 void Polygon::registerDraggables(vector<Draggable*> & draggables) {

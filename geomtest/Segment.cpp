@@ -41,6 +41,11 @@ ostream& Segment::serialize(ostream& str) const {
 	return str;
 }
 
+ostream& Segment::raw_serialize(ostream& str) const {
+	str << x1 << " " << y1 << " " << x2 << " " << y2 << endl;
+	return str;
+}
+
 void Segment::registerDraggables(vector<Draggable*> & draggables) {
 	draggables.push_back(new SegmentEnd(this, true));
 	draggables.push_back(new SegmentEnd(this, false));

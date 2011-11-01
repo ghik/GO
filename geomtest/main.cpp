@@ -25,7 +25,7 @@ GtkWidget *window = NULL, *drawingArea = NULL, *posLabel = NULL;
 
 GStaticMutex mutex = G_STATIC_MUTEX_INIT;
 
-vector<Figure*>* figures = NULL;
+vector<Figure*>* volatile figures = NULL;
 vector<Draggable*> draggables;
 
 Draggable* dragged = NULL;
@@ -123,6 +123,9 @@ Figure* parseFigure(const string& fig, istringstream& str) {
 vector<Figure*>* parseFigures(const char* filename) {
 	vector<Figure*>* res = new vector<Figure*>;
 	ifstream fin(filename);
+	if(!fin.is_open()) {
+		return NULL;
+	}
 	double lineColor[4] = { 0, 0, 0, 1 };
 	double fillColor[4] = { 1, 1, 1, 0 };
 	double labelColor[4] = { 0, 0, 0, 1 };
@@ -131,6 +134,11 @@ vector<Figure*>* parseFigures(const char* filename) {
 	int begframe = 0, endframe = INT_MAX;
 	while (!fin.eof()) {
 		fin.getline(buf, 1000);
+
+		if(strlen(buf) == 0) {
+			continue;
+		}
+
 		istringstream ss(buf);
 		ss >> cmd;
 		if (cmd == "lineColor") {
@@ -144,6 +152,9 @@ vector<Figure*>* parseFigures(const char* filename) {
 			ss >> begframe >> endframe;
 			if (endframe > maxframe) {
 				maxframe = endframe;
+			}
+			if (begframe > maxframe) {
+				maxframe = begframe;
 			}
 		} else {
 			Figure* fig = parseFigure(cmd, ss);
@@ -388,6 +399,14 @@ bool key_press(GtkWidget* widget, GdkEvent* event, gpointer data) {
 	return true;
 }
 
+void free_figures() {
+	for (vector<Figure*>::iterator it = figures->begin(); it != figures->end();
+			it++) {
+		delete *it;
+	}
+	delete figures;
+}
+
 gpointer shell(gpointer data) {
 	char buf[10000];
 	while(!cin.eof()) {
@@ -398,11 +417,53 @@ gpointer shell(gpointer data) {
 			continue;
 		}
 
-		g_static_mutex_lock(&mutex);
+		string cmd;
+		istringstream ss(buf);
+		ss >> cmd;
 
-		cout << "Executing command...\n";
+		if(cmd == "save") {
+			string filename;
+			ss >> filename;
 
-		g_static_mutex_unlock(&mutex);
+			ofstream fout(filename.c_str());
+			for(vector<Figure*>::iterator it=figures->begin();it!=figures->end();it++) {
+				(*it)->serialize(fout);
+			}
+			fout.close();
+			cout << "Saved to " << filename << endl;
+		} else if(cmd == "saveraw") {
+			string filename;
+			ss >> filename;
+
+			ofstream fout(filename.c_str());
+			for(vector<Figure*>::iterator it=figures->begin();it!=figures->end();it++) {
+				(*it)->raw_serialize(fout);
+			}
+			fout.close();
+			cout << "Saved to " << filename << endl;
+		} else if(cmd == "load") {
+			string filename;
+			ss >> filename;
+
+			g_static_mutex_lock(&mutex);
+			draggables.clear();
+			free_figures();
+			figures = parseFigures(filename.c_str());
+			g_static_mutex_unlock(&mutex);
+			gtk_widget_queue_draw(drawingArea);
+			cout << "Loaded figures from " << filename << endl;
+		} else if(cmd == "clear") {
+			g_static_mutex_lock(&mutex);
+			draggables.clear();
+			free_figures();
+			figures = new vector<Figure*>;
+			g_static_mutex_unlock(&mutex);
+			gtk_widget_queue_draw(drawingArea);
+		} else if(cmd == "exit") {
+			gtk_main_quit();
+		} else {
+			cout << "Unknown command: " << cmd << endl;
+		}
 	}
 	return NULL;
 }
@@ -444,18 +505,19 @@ int main(int argc, char *argv[]) {
 	gdk_window_set_events(gtk_widget_get_window(drawingArea),
 			GDK_ALL_EVENTS_MASK);
 
-	figures = parseFigures("figures.txt");
+	if(argc > 1) {
+		figures = parseFigures(argv[1]);
+	}
+	if(figures == NULL) {
+		figures = new vector<Figure*>;
+	}
 	update_view_params(zoom, centerx, centery);
 
 	g_thread_create(shell, NULL, false, NULL);
 
 	gtk_main();
 
-	for (vector<Figure*>::iterator it = figures->begin(); it != figures->end();
-			it++) {
-		delete *it;
-	}
-	delete figures;
+	free_figures();
 
 	return 0;
 }

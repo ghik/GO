@@ -76,6 +76,10 @@ ostream& Line::serialize(ostream& str) const {
 	return str;
 }
 
+ostream& Line::raw_serialize(ostream& str) const {
+	return str << begx << " " << begy << " " << deg(dirAngle) << endl;
+}
+
 void Line::registerDraggables(vector<Draggable*> & draggables) {
 	draggables.push_back(this);
 }
