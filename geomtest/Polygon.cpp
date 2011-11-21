@@ -66,6 +66,19 @@ ostream& Polygon::raw_serialize(ostream& str) const {
 	return str << endl;
 }
 
+ostream& Polygon::mat_serialize(ostream& str) const {
+	str << "[";
+	for(int i=0;i<nVerts;i++) {
+		str << verts[2*i] << ' ';
+	}
+	str << ";";
+	for(int i=0;i<nVerts;i++) {
+		str << verts[2*i+1] << ' ';
+	}
+	return str << "]\n";
+}
+
+
 void Polygon::registerDraggables(vector<Draggable*> & draggables) {
 	for(int i=0;i<nVerts;i++) {
 		draggables.push_back(new PolygonVertex(this, i));

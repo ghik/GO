@@ -98,9 +98,9 @@ bool in_polygon(Point& p1, Point& p2, Point& p3) {
 }
 
 int main(int argc, char** argv) {
-	const char* file = "sq_polygon.txt";
+	const char* file = "dziub.txt";
 
-	ofstream fout("../geomtest/polygon_res.txt");
+	ofstream fout("../geomtest/dziub_res.txt");
 
 	ifstream fin(file);
 	fin >> n;

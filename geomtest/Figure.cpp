@@ -69,6 +69,10 @@ void Figure::setWidget(GtkWidget *widget) {
 	this->widget = widget;
 }
 
+ostream& Figure::mat_serialize(ostream& ostr) const {
+	return ostr;
+}
+
 ostream& operator<<(ostream& str, const Figure& figure) {
 	figure.serialize(str);
 	return str;

@@ -441,6 +441,16 @@ gpointer shell(gpointer data) {
 			}
 			fout.close();
 			cout << "Saved to " << filename << endl;
+		} else if(cmd == "savemat") {
+			string filename;
+			ss >> filename;
+
+			ofstream fout(filename.c_str());
+			for(vector<Figure*>::iterator it=figures->begin();it!=figures->end();it++) {
+				(*it)->mat_serialize(fout);
+			}
+			fout.close();
+			cout << "Saved to " << filename << endl;
 		} else if(cmd == "load") {
 			string filename;
 			ss >> filename;
