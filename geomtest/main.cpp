@@ -20,6 +20,7 @@ using namespace std;
 #include "Polygon.h"
 #include "Polyline.h"
 #include "Circle.h"
+#include "Parabola.h"
 
 GtkWidget *window = NULL, *drawingArea = NULL, *posLabel = NULL;
 
@@ -116,6 +117,13 @@ Figure* parseFigure(const string& fig, istringstream& str) {
 			str >> circle->label;
 		}
 		return circle;
+	} else if (fig == "parabola") {
+		Parabola* parabola = new Parabola;
+		str >> parabola->xc >> parabola->yc >> parabola->a >> parabola->y1 >> parabola->y2;
+		if(!str.eof()) {
+			str >> parabola->label;
+		}
+		return parabola;
 	}
 	return NULL;
 }
@@ -451,6 +459,10 @@ gpointer shell(gpointer data) {
 			}
 			fout.close();
 			cout << "Saved to " << filename << endl;
+		} else if(cmd == "saveimg") {
+			string filename;
+			ss >> filename;
+
 		} else if(cmd == "load") {
 			string filename;
 			ss >> filename;

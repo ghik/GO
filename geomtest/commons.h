@@ -42,7 +42,6 @@ const int KEY_ESC = 65307;
 
 extern double zoom, centerx, centery;
 extern cairo_matrix_t revViewMatrix;
-extern double minx, miny, maxx, maxy;
 
 double rad(double deg);
 double deg(double rad);
