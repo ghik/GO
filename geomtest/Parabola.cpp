@@ -33,8 +33,6 @@ void Parabola::draw(cairo_t *cr) const {
 	vector<double> verts;
 	partition(y1, y2, verts, clip);
 
-	cout << verts.size() << endl;
-
 	applyLineColor(cr);
 	if(!verts.empty()) {
 		cairo_move_to(cr, verts[0], verts[1]);

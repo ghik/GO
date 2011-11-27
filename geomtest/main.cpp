@@ -194,10 +194,8 @@ void current_position(double* x, double* y) {
 	*y = iy;
 }
 
-void paint(GtkWidget* widget) {
+void paint(cairo_t* cr) {
 	g_static_mutex_lock(&mutex);
-
-	cairo_t* cr = gdk_cairo_create(gtk_widget_get_window(widget));
 
 	cairo_translate(cr, SCREEN_SIZE / 2.0 + centerx,
 			SCREEN_SIZE / 2.0 - centery);
@@ -232,7 +230,9 @@ void paint(GtkWidget* widget) {
 }
 
 bool expose(GtkWidget* widget, GdkEvent* event, gpointer data) {
-	paint(widget);
+	cairo_t* cr = gdk_cairo_create(gtk_widget_get_window(widget));
+	paint(cr);
+	cairo_destroy(cr);
 	return true;
 }
 
@@ -463,6 +463,28 @@ gpointer shell(gpointer data) {
 			string filename;
 			ss >> filename;
 
+			int width, height;
+			gdk_drawable_get_size(gtk_widget_get_window(drawingArea), &width, &height);
+
+			cairo_surface_t* surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
+
+			cairo_t* cr = cairo_create(surface);
+
+			cairo_set_source_rgba(cr, 1, 1, 1, 1);
+			cairo_move_to(cr, 0, 0);
+			cairo_line_to(cr, width, 0);
+			cairo_line_to(cr, width, height);
+			cairo_line_to(cr, 0, height);
+			cairo_line_to(cr, 0, 0);
+			cairo_fill(cr);
+
+			paint(cr);
+			cairo_destroy(cr);
+
+			cairo_surface_write_to_png(surface, filename.c_str());
+			cairo_surface_destroy(surface);
+
+			cout << "Saved to " << filename << endl;
 		} else if(cmd == "load") {
 			string filename;
 			ss >> filename;
