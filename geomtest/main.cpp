@@ -21,6 +21,7 @@ using namespace std;
 #include "Polyline.h"
 #include "Circle.h"
 #include "Parabola.h"
+#include "RBTreeFigure.h"
 
 GtkWidget *window = NULL, *drawingArea = NULL, *controlHbox = NULL, *posLabel = NULL;
 
@@ -134,6 +135,12 @@ Figure* parseFigure(const string& fig, istringstream& str) {
 			str >> parabola->label;
 		}
 		return parabola;
+	} else if (fig == "rbtree") {
+		RBTree<int>* tree = new RBTree<int>;
+		str >> *tree;
+		RBTreeFigure* treefig = new RBTreeFigure(tree);
+		str >> treefig->topx >> treefig->topy;
+		return treefig;
 	}
 	return NULL;
 }
