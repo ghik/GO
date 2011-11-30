@@ -54,6 +54,7 @@ void get_drawingarea_size(int *width, int *height);
 
 void screen_to_std(double* x, double* y);
 void screen_to_view(double* x, double* y);
+void get_text_size(cairo_t* cr, const char* text, double* width, double* height);
 
 void setColor(double* color, double r, double g, double b, double a);
 void setColor(double* target, const double* color);

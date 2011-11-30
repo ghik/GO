@@ -47,6 +47,13 @@ void screen_to_view(double* x, double* y) {
 	cairo_matrix_transform_point(&revViewMatrix, x, y);
 }
 
+void get_text_size(cairo_t* cr, const char* text, double* width, double* height) {
+	cairo_text_extents_t textExtents;
+	cairo_text_extents(cr, text, &textExtents);
+	*width = textExtents.width;
+	*height = textExtents.height;
+}
+
 void setColor(double* color, double r, double g, double b, double a) {
 	color[0] = r;
 	color[1] = g;

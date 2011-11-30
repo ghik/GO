@@ -30,6 +30,7 @@ public:
 
 private:
 	double computeNodeWidths(Tree::PNode pnode, std::map<Tree::PNode, double>& widths) const;
+	void drawSubtree(cairo_t* cr, Tree::PNode pnode, std::map<Tree::PNode, double>& widths) const;
 };
 
 #endif /* RBTREEFIGURE_H_ */

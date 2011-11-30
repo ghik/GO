@@ -10,6 +10,8 @@
 #include <cmath>
 using namespace std;
 
+#include "../geomtest/RBTree.h"
+
 const double DOTSIZE = 2;
 
 double uniform(double a, double b) {
@@ -36,9 +38,15 @@ void rand_area(double x1, double y1, double x2, double y2, double* x, double* y)
 int main(int argc, char** argv) {
 	srand(time(0));
 
-	ofstream fout;
-	ofstream raw;
+	ofstream fout("../geomtest/tree.txt");
 
+	RBTree<int> tree;
+	for(int i=0;i<100;i++) {
+		tree.insert(tree.create(rand()%100));
+	}
+	fout << "rbtree " << tree << endl;
+
+	/*
 	fout.open("../geomtest/segments.txt");
 	raw.open("../lab3/raw_segments.txt");
 	raw << 50 << endl;
@@ -49,8 +57,9 @@ int main(int argc, char** argv) {
 		fout << "segment " << x1 << ' ' << y1 << ' ' << x2 << ' ' << y2 << endl;
 		raw << x1 << ' ' << y1 << ' ' << x2 << ' ' << y2 << endl;
 	}
+	*/
+
 	fout.close();
-	raw.close();
 
 	return 0;
 }
