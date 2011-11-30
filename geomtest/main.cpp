@@ -22,7 +22,7 @@ using namespace std;
 #include "Circle.h"
 #include "Parabola.h"
 
-GtkWidget *window = NULL, *drawingArea = NULL, *posLabel = NULL;
+GtkWidget *window = NULL, *drawingArea = NULL, *controlHbox = NULL, *posLabel = NULL;
 
 GStaticMutex mutex = G_STATIC_MUTEX_INIT;
 
@@ -44,14 +44,24 @@ int frame = 0;
 int maxframe = 0;
 long lastRepaintTime = 0;
 
+void get_drawingarea_size(int *width, int *height) {
+	GtkAllocation allocation;
+	gtk_widget_get_allocation(drawingArea, &allocation);
+	*width = allocation.width;
+	*height = allocation.height;
+}
+
 void update_view_params(double _zoom, double _cx, double _cy) {
 	zoom = _zoom;
 	centerx = _cx;
 	centery = _cy;
+
+	int width, height;
+	get_drawingarea_size(&width, &height);
 	cairo_matrix_init_identity(&revViewMatrix);
 	cairo_matrix_scale(&revViewMatrix, 1 / zoom, -1 / zoom);
-	cairo_matrix_translate(&revViewMatrix, -SCREEN_SIZE / 2.0 - centerx,
-			-SCREEN_SIZE / 2.0 + centery);
+	cairo_matrix_translate(&revViewMatrix, -width / 2.0 - centerx,
+			-height / 2.0 + centery);
 }
 
 Figure* parseFigure(const string& fig, istringstream& str) {
@@ -197,8 +207,10 @@ void current_position(double* x, double* y) {
 void paint(cairo_t* cr) {
 	g_static_mutex_lock(&mutex);
 
-	cairo_translate(cr, SCREEN_SIZE / 2.0 + centerx,
-			SCREEN_SIZE / 2.0 - centery);
+	int width, height;
+	get_drawingarea_size(&width, &height);
+	cairo_translate(cr, width / 2.0 + centerx,
+			height / 2.0 - centery);
 	cairo_scale(cr, zoom, -zoom);
 
 	draw_grid(cr);
@@ -415,6 +427,129 @@ void free_figures() {
 	delete figures;
 }
 
+void save(const char* filename) {
+	ofstream fout(filename);
+	for(vector<Figure*>::iterator it=figures->begin();it!=figures->end();it++) {
+		(*it)->serialize(fout);
+	}
+	fout.close();
+}
+
+void saveraw(const char* filename) {
+	ofstream fout(filename);
+	for(vector<Figure*>::iterator it=figures->begin();it!=figures->end();it++) {
+		(*it)->raw_serialize(fout);
+	}
+	fout.close();
+}
+
+void savemat(const char* filename) {
+	ofstream fout(filename);
+	for(vector<Figure*>::iterator it=figures->begin();it!=figures->end();it++) {
+		(*it)->mat_serialize(fout);
+	}
+	fout.close();
+}
+
+void saveimg(const char* filename) {
+	int width, height;
+	gdk_drawable_get_size(gtk_widget_get_window(drawingArea), &width, &height);
+
+	cairo_surface_t* surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
+
+	cairo_t* cr = cairo_create(surface);
+
+	cairo_set_source_rgba(cr, 1, 1, 1, 1);
+	cairo_move_to(cr, 0, 0);
+	cairo_line_to(cr, width, 0);
+	cairo_line_to(cr, width, height);
+	cairo_line_to(cr, 0, height);
+	cairo_line_to(cr, 0, 0);
+	cairo_fill(cr);
+
+	paint(cr);
+	cairo_destroy(cr);
+
+	cairo_surface_write_to_png(surface, filename);
+	cairo_surface_destroy(surface);
+}
+
+void load(const char* filename) {
+	g_static_mutex_lock(&mutex);
+	draggables.clear();
+	free_figures();
+	figures = parseFigures(filename);
+	g_static_mutex_unlock(&mutex);
+	gtk_widget_queue_draw(drawingArea);
+}
+
+void clear() {
+	g_static_mutex_lock(&mutex);
+	draggables.clear();
+	free_figures();
+	figures = new vector<Figure*>;
+	g_static_mutex_unlock(&mutex);
+	gtk_widget_queue_draw(drawingArea);
+}
+
+bool generic_loadsave_handler(GtkButton* button, gpointer data) {
+	typedef void (*LoadSaveFunc)(const char*);
+	LoadSaveFunc func = (LoadSaveFunc)data;
+
+	bool save = (func != load);
+	GtkWidget *dialog;
+	dialog = gtk_file_chooser_dialog_new (
+						  save ? "Save..." : "Load...",
+					      GTK_WINDOW(window),
+					      save ? GTK_FILE_CHOOSER_ACTION_SAVE : GTK_FILE_CHOOSER_ACTION_OPEN,
+					      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+					      save ? GTK_STOCK_SAVE : GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+					      NULL);
+	if(save) {
+		gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
+	}
+
+	if(gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+		char* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+		func(filename);
+		g_free(filename);
+	}
+
+	gtk_widget_destroy(dialog);
+
+	return true;
+}
+
+bool clear_handler(GtkButton* button, gpointer data) {
+	clear();
+	return true;
+}
+
+GtkWidget* create_control_gui() {
+	GtkWidget* hbox = gtk_hbox_new(false, 5);
+	GtkWidget *loadbut, *savebut, *saverawbut, *saveimgbut, *clearbut;
+
+	loadbut = gtk_button_new_with_label("Load");
+	savebut = gtk_button_new_with_label("Save");
+	saverawbut = gtk_button_new_with_label("Save raw");
+	saveimgbut = gtk_button_new_with_label("Save image");
+	clearbut = gtk_button_new_with_label("Clear");
+
+	g_signal_connect(G_OBJECT(loadbut), "clicked", G_CALLBACK(generic_loadsave_handler), (gpointer)load);
+	g_signal_connect(G_OBJECT(savebut), "clicked", G_CALLBACK(generic_loadsave_handler), (gpointer)save);
+	g_signal_connect(G_OBJECT(saverawbut), "clicked", G_CALLBACK(generic_loadsave_handler), (gpointer)saveraw);
+	g_signal_connect(G_OBJECT(saveimgbut), "clicked", G_CALLBACK(generic_loadsave_handler), (gpointer)saveimg);
+	g_signal_connect(G_OBJECT(clearbut), "clicked", G_CALLBACK(clear_handler), NULL);
+
+	gtk_container_add(GTK_CONTAINER(hbox), GTK_WIDGET(loadbut));
+	gtk_container_add(GTK_CONTAINER(hbox), GTK_WIDGET(savebut));
+	gtk_container_add(GTK_CONTAINER(hbox), GTK_WIDGET(saverawbut));
+	gtk_container_add(GTK_CONTAINER(hbox), GTK_WIDGET(saveimgbut));
+	gtk_container_add(GTK_CONTAINER(hbox), GTK_WIDGET(clearbut));
+
+	return hbox;
+}
+
 gpointer shell(gpointer data) {
 	char buf[10000];
 	while(!cin.eof()) {
@@ -432,77 +567,30 @@ gpointer shell(gpointer data) {
 		if(cmd == "save") {
 			string filename;
 			ss >> filename;
-
-			ofstream fout(filename.c_str());
-			for(vector<Figure*>::iterator it=figures->begin();it!=figures->end();it++) {
-				(*it)->serialize(fout);
-			}
-			fout.close();
+			save(filename.c_str());
 			cout << "Saved to " << filename << endl;
 		} else if(cmd == "saveraw") {
 			string filename;
 			ss >> filename;
-
-			ofstream fout(filename.c_str());
-			for(vector<Figure*>::iterator it=figures->begin();it!=figures->end();it++) {
-				(*it)->raw_serialize(fout);
-			}
-			fout.close();
+			saveraw(filename.c_str());
 			cout << "Saved to " << filename << endl;
 		} else if(cmd == "savemat") {
 			string filename;
 			ss >> filename;
-
-			ofstream fout(filename.c_str());
-			for(vector<Figure*>::iterator it=figures->begin();it!=figures->end();it++) {
-				(*it)->mat_serialize(fout);
-			}
-			fout.close();
+			savemat(filename.c_str());
 			cout << "Saved to " << filename << endl;
 		} else if(cmd == "saveimg") {
 			string filename;
 			ss >> filename;
-
-			int width, height;
-			gdk_drawable_get_size(gtk_widget_get_window(drawingArea), &width, &height);
-
-			cairo_surface_t* surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
-
-			cairo_t* cr = cairo_create(surface);
-
-			cairo_set_source_rgba(cr, 1, 1, 1, 1);
-			cairo_move_to(cr, 0, 0);
-			cairo_line_to(cr, width, 0);
-			cairo_line_to(cr, width, height);
-			cairo_line_to(cr, 0, height);
-			cairo_line_to(cr, 0, 0);
-			cairo_fill(cr);
-
-			paint(cr);
-			cairo_destroy(cr);
-
-			cairo_surface_write_to_png(surface, filename.c_str());
-			cairo_surface_destroy(surface);
-
+			saveimg(filename.c_str());
 			cout << "Saved to " << filename << endl;
 		} else if(cmd == "load") {
 			string filename;
 			ss >> filename;
-
-			g_static_mutex_lock(&mutex);
-			draggables.clear();
-			free_figures();
-			figures = parseFigures(filename.c_str());
-			g_static_mutex_unlock(&mutex);
-			gtk_widget_queue_draw(drawingArea);
+			load(filename.c_str());
 			cout << "Loaded figures from " << filename << endl;
 		} else if(cmd == "clear") {
-			g_static_mutex_lock(&mutex);
-			draggables.clear();
-			free_figures();
-			figures = new vector<Figure*>;
-			g_static_mutex_unlock(&mutex);
-			gtk_widget_queue_draw(drawingArea);
+			clear();
 		} else if(cmd == "exit") {
 			gtk_main_quit();
 		} else {
@@ -526,11 +614,17 @@ int main(int argc, char *argv[]) {
 	drawingArea = gtk_drawing_area_new();
 	gtk_container_add(GTK_CONTAINER(vbox), GTK_WIDGET(drawingArea));
 
-	gtk_drawing_area_size(GTK_DRAWING_AREA(drawingArea), SCREEN_SIZE,
-			SCREEN_SIZE);
+	gtk_window_set_default_size(GTK_WINDOW(window), SCREEN_SIZE, SCREEN_SIZE);
+
+	controlHbox = create_control_gui();
+	gtk_container_add(GTK_CONTAINER(vbox), GTK_WIDGET(controlHbox));
 
 	posLabel = gtk_label_new("");
-	gtk_container_add(GTK_CONTAINER(vbox), GTK_WIDGET(posLabel));
+	gtk_container_add(GTK_CONTAINER(controlHbox), posLabel);
+	gtk_box_set_child_packing(GTK_BOX(controlHbox), posLabel, false, true, 0, GTK_PACK_END);
+	gtk_widget_set_size_request(posLabel, 150, -1);
+
+	gtk_box_set_child_packing(GTK_BOX(vbox), GTK_WIDGET(controlHbox), false, true, 5, GTK_PACK_START);
 
 	g_signal_connect(GTK_WIDGET(window), "delete-event",
 			G_CALLBACK(gtk_main_quit), NULL);

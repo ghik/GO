@@ -25,7 +25,9 @@ double dist(double x1, double y1, double x2, double y2) {
 }
 
 double faraway(double x, double y) {
-	return fabs(x+centerx)+fabs(x+centery)+2*SCREEN_SIZE/zoom;
+	int w, h;
+	get_drawingarea_size(&w, &h);
+	return fabs(x+centerx)+fabs(x+centery)+2*max(w,h)/zoom;
 }
 
 long now() {
@@ -35,8 +37,10 @@ long now() {
 }
 
 void screen_to_std(double* x, double* y) {
-	*x = *x - SCREEN_SIZE / 2.0;
-	*y = SCREEN_SIZE / 2.0 - *y;
+	int width, height;
+	get_drawingarea_size(&width, &height);
+	*x = *x - width / 2.0;
+	*y = height / 2.0 - *y;
 }
 
 void screen_to_view(double* x, double* y) {

@@ -50,6 +50,8 @@ double faraway(double x, double y);
 
 long now();
 
+void get_drawingarea_size(int *width, int *height);
+
 void screen_to_std(double* x, double* y);
 void screen_to_view(double* x, double* y);
 
