@@ -8,6 +8,7 @@
 #include "commons.h"
 #include "Segment.h"
 #include <cmath>
+#include <iostream>
 
 Segment::Segment() {
 }
@@ -20,6 +21,9 @@ Segment::~Segment() {
 }
 
 void Segment::draw(cairo_t* cr) const {
+	if(x1 == x2 && y1 == y2) {
+		return;
+	}
 	beginDraw(cr, 0, 0, 0);
 
 	applyLineColor(cr);

@@ -19,9 +19,16 @@ Parabola::Parabola():
 
 Parabola::Parabola(double _xc, double _yc, double _a, double _y1, double _y2):
 	xc(_xc), yc(_yc), a(_a), y1(_y1), y2(_y2) {
+	norm();
 }
 
 Parabola::~Parabola() {
+}
+
+void Parabola::norm() {
+	if(y1 > y2) {
+		swap(y1, y2);
+	}
 }
 
 void Parabola::draw(cairo_t *cr) const {
@@ -60,13 +67,17 @@ void Parabola::partition(double iy1, double iy2, vector<double>& pts, double cli
 	double ix1 = a*(iy1-yc)*(iy1-yc)+xc;
 	double ix2 = a*(iy2-yc)*(iy2-yc)+xc;
 	double d = (iy1-iy2)*(iy1-iy2)+(ix1-ix2)*(ix1-ix2)*zoom*zoom;
-	if(d > 15*15) {
+	if(d > 3*3) {
 		double icy = (iy1+iy2)/2;
 		partition(iy1, icy, pts, clip);
 		partition(icy, iy2, pts, clip);
 	} else if(visible(ix1, iy1, clip)) {
 		pts.push_back(ix1);
 		pts.push_back(iy1);
+		if(iy1 < yc && iy2 > yc) {
+			pts.push_back(xc);
+			pts.push_back(yc);
+		}
 	}
 	if(iy2 == y2 && visible(ix2, iy2, clip)) {
 		pts.push_back(ix2);

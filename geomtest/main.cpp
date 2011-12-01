@@ -35,6 +35,8 @@ Polygon* paintedPolygon = NULL;
 bool draggingScreen = false;
 double dragScreenBegx, dragScreenBegy;
 
+bool puttingDots = false;
+
 double zoom = 1;
 double centerx = 0;
 double centery = 0;
@@ -131,6 +133,7 @@ Figure* parseFigure(const string& fig, istringstream& str) {
 	} else if (fig == "parabola") {
 		Parabola* parabola = new Parabola;
 		str >> parabola->xc >> parabola->yc >> parabola->a >> parabola->y1 >> parabola->y2;
+		parabola->norm();
 		if(!str.eof()) {
 			str >> parabola->label;
 		}
@@ -264,7 +267,7 @@ bool button_press(GtkWidget* widget, GdkEvent* event, gpointer data) {
 
 	switch (event->button.button) {
 	case 1:
-		if (paintedPolygon == NULL) {
+		if (paintedPolygon == NULL && !puttingDots) {
 			draggingScreen = true;
 			dragScreenBegx = sx;
 			dragScreenBegy = sy;
@@ -298,6 +301,8 @@ bool button_release(GtkWidget* widget, GdkEvent* event, gpointer data) {
 	case 1:
 		if (paintedPolygon != NULL) {
 			paintedPolygon->addPoint(x, y);
+		} else if (puttingDots) {
+			figures->push_back(new Dot(x, y));
 		} else {
 			draggingScreen = false;
 			update_view_params(zoom, centerx + (sx - dragScreenBegx),
@@ -409,6 +414,10 @@ bool key_press(GtkWidget* widget, GdkEvent* event, gpointer data) {
 			paintedPolygon->registerDraggables(draggables);
 			paintedPolygon = NULL;
 		}
+		break;
+	case 'd':
+	case 'D':
+		puttingDots = !puttingDots;
 		break;
 	default:
 		cout << "Key " << event->key.keyval << endl;

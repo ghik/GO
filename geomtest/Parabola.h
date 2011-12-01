@@ -15,6 +15,7 @@ public:
 	Parabola();
 	Parabola(double _xc, double _yc, double _a, double _y1, double _y2);
 	virtual ~Parabola();
+	void norm();
 
 	virtual void draw(cairo_t *cr) const;
 	virtual ostream& serialize(ostream& str) const;
