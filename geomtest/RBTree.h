@@ -83,9 +83,15 @@ public:
 	int size();
 	PNode create();
 	PNode create(const T& val);
+	/* Returns any node with value equal to 'val' or NIL if there is no such node */
 	PNode find(const T& val);
+	/* Returns first node with value greater or equal to 'val' or NIL if there is no such node */
+	PNode lower_bound(const T& val);
+	/* Returns last node with value less or equal to 'val' or NIL if there is no such node */
+	PNode upper_bound(const T& val);
 	PNode successor(PNode n);
 	PNode predecessor(PNode n);
+	PNode insert(const T& val);
 	void insert(PNode n);
 	void remove(PNode n, bool swaplinks = true);
 
@@ -167,6 +173,46 @@ typename RBTree<T, C>::PNode RBTree<T, C>::find(const T& val) {
 			return n;
 	}
 	return NIL;
+}
+
+template<class T, class C>
+typename RBTree<T, C>::PNode RBTree<T, C>::lower_bound(const T& val) {
+	PNode n = root, pn;
+	while (n != NIL) {
+		pn = n;
+		int comp_res = comp(val, n->val);
+		if (comp_res <= 0)
+			n = n->left;
+		else
+			n = n->right;
+	}
+	if(pn == NIL) {
+		return NIL;
+	}
+	if(comp(val, pn->val) > 0) {
+		pn = pn->successor();
+	}
+	return pn;
+}
+
+template<class T, class C>
+typename RBTree<T, C>::PNode RBTree<T, C>::upper_bound(const T& val) {
+	PNode n = root, pn;
+	while (n != NIL) {
+		pn = n;
+		int comp_res = comp(val, n->val);
+		if (comp_res >= 0)
+			n = n->right;
+		else
+			n = n->left;
+	}
+	if(pn == NIL) {
+		return NIL;
+	}
+	if(comp(val, pn->val) < 0) {
+		pn = pn->predecessor();
+	}
+	return pn;
 }
 
 template<class T, class C>
@@ -257,6 +303,13 @@ void RBTree<T, C>::rrotate(PNode n) {
 	if (n->left != NIL)
 		n->left->p = n;
 	n->p->right = n;
+}
+
+template<class T, class C>
+typename RBTree<T, C>::PNode RBTree<T, C>::insert(const T& value) {
+	PNode res = create(value);
+	insert(res);
+	return res;
 }
 
 template<class T, class C>

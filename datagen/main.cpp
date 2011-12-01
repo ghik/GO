@@ -38,13 +38,19 @@ void rand_area(double x1, double y1, double x2, double y2, double* x, double* y)
 int main(int argc, char** argv) {
 	srand(time(0));
 
-	ofstream fout("../geomtest/tree.txt");
+	ifstream fin("../geomtest/tree.txt");
 
+	char buf[100];
 	RBTree<int> tree;
-	for(int i=0;i<100;i++) {
-		tree.insert(tree.create(rand()%100));
+	fin >> buf >> tree;
+	for(RBTree<int>::PNode n=tree.first();n!=RBTree<int>::NIL;n=n->successor()) {
+		cout << n->value() << ' ';
 	}
-	fout << "rbtree " << tree << endl;
+	cout << endl;
+
+	RBTree<int>::PNode lb;
+	lb = tree.lower_bound(100);
+	cout << lb->predecessor()->value() << ' ' << lb->value() << ' ' << lb->successor()->value() << endl;
 
 	/*
 	fout.open("../geomtest/segments.txt");
@@ -59,7 +65,7 @@ int main(int argc, char** argv) {
 	}
 	*/
 
-	fout.close();
+	fin.close();
 
 	return 0;
 }
