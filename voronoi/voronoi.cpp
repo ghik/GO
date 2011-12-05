@@ -1,20 +1,29 @@
 #include "voronoi.h"
 
+// Bounding box coordinates.
+double X0 = 0, X1 = 0, Y0 = 0, Y1 = 0;
+
+ostream* pfout = NULL;
+int voronoi_frame = 0;
+
+vector<seg*> output;
+arc *root = 0;
+
 priority_queue<point,  vector<point>,  gt> points; // site events
 priority_queue<event*, vector<event*>, gt> events; // circle events
 
-int main(int argc, char** argv)
+void voronoi(vector<point>& pts, ostream& fout)
 {
-   ifstream fin("vorodots_raw.txt");
-   fout.open("../geomtest/voronoi.txt");
-   fout << "frames 0 -1\n";
-   fout << "fillColor 0 0 0 1\n";
+   pfout = &fout;
+   *pfout << "frames 0 -1\n";
+   *pfout << "fillColor 0 0 0 1\n";
    // Read points from input.
    point p;
-   while (fin >> p.x >> p.y) {
+   for(unsigned int i=0;i<pts.size();i++) {
+      p = pts[i];
       points.push(p);
 
-      fout << "dot " << p.x << ' ' << p.y << ' ' << 2 << endl;
+      *pfout << "dot " << p.x << ' ' << p.y << ' ' << 2 << endl;
 
       // Keep track of bounding box size.
       if (p.x < X0) X0 = p.x;
@@ -38,9 +47,7 @@ int main(int argc, char** argv)
       process_event();
 
    finish_edges(); // Clean up dangling edges.
-   print_output(); // Output the voronoi diagram.
-   fout.close();
-   fin.close();
+   //print_output(); // Output the voronoi diagram.
 }
 
 double clip(double val, double lb, double ub) {
@@ -54,15 +61,15 @@ double clip(double val, double lb, double ub) {
 }
 
 void fout_paraboles(double x) {
-	fout << "frames " << frame << ' ' << frame << endl;
+	*pfout << "frames " << voronoi_frame << ' ' << voronoi_frame << endl;
 	for(arc* a = root; a != NULL; a = a->next) {
 		double y0 = Y0, y1 = Y1;
 		point p0, p1;
 		if(a->prev != NULL) {
 			p0 = intersection(a->prev->p, a->p, x);
 			if(a->s0 != NULL) {
-				fout << "lineColor 0 0 0 1\n";
-				fout << "segment " << a->s0->start.x << ' ' << a->s0->start.y << ' ' << p0.x << ' ' << p0.y << endl;
+				*pfout << "lineColor 0 0 0 1\n";
+				*pfout << "segment " << a->s0->start.x << ' ' << a->s0->start.y << ' ' << p0.x << ' ' << p0.y << endl;
 			}
 			y0 = clip(p0.y, Y0, Y1);
 		}
@@ -70,13 +77,13 @@ void fout_paraboles(double x) {
 			p1 = intersection(a->p, a->next->p, x);
 			y1 = clip(p1.y, Y0, Y1);
 		}
-		fout << "lineColor 0 0 1 1\n";
+		*pfout << "lineColor 0 0 1 1\n";
 		double d = x-a->p.x;
 		if(d != 0) {
 			double pa = -1/(2*d);
-			fout << "parabola " << a->p.x+d/2 << ' ' << a->p.y << ' ' << pa << ' ' << y0 << ' ' << y1 << endl;
+			*pfout << "parabola " << a->p.x+d/2 << ' ' << a->p.y << ' ' << pa << ' ' << y0 << ' ' << y1 << endl;
 		} else {
-			fout << "segment " << a->p.x << ' ' << a->p.y << ' ' << p0.x << ' ' << p0.y << endl;
+			*pfout << "segment " << a->p.x << ' ' << a->p.y << ' ' << p0.x << ' ' << p0.y << endl;
 		}
 	}
 }
@@ -87,11 +94,11 @@ void process_point()
    point p = points.top();
    points.pop();
 
-   frame++;
+   voronoi_frame++;
 
-   fout << "frames " << frame << ' ' << frame << endl;
-   fout << "lineColor 1 0 0 1\n";
-   fout << "line " << p.x << " 0 90\n";
+   *pfout << "frames " << voronoi_frame << ' ' << voronoi_frame << endl;
+   *pfout << "lineColor 1 0 0 1\n";
+   *pfout << "line " << p.x << " 0 90\n";
 
    // Add a new arc to the parabolic front.
    front_insert(p);
@@ -105,11 +112,11 @@ void process_event()
    event *e = events.top();
    events.pop();
 
-   frame++;
+   voronoi_frame++;
 
-   fout << "frames " << frame << ' ' << frame << endl;
-   fout << "lineColor 1 0 0 1\n";
-   fout << "line " << e->x << " 0 90\n";
+   *pfout << "frames " << voronoi_frame << ' ' << voronoi_frame << endl;
+   *pfout << "lineColor 1 0 0 1\n";
+   *pfout << "line " << e->x << " 0 90\n";
 
    if (e->valid) {
       // Start a new edge.
@@ -208,9 +215,12 @@ void check_circle_event(arc *i, double x0)
       // Create new event.
       i->e = new event(x, o, i);
       events.push(i->e);
-      fout << "frames " << frame << " -1\n";
-      fout << "lineColor 1 0 0 1" << endl << "fillColor 1 0 0 1" << endl;
-      fout << "dot " << x << ' ' << o.y << ' ' << 1 << endl;
+      *pfout << "frames " << voronoi_frame << " -1\n";
+      *pfout << "lineColor 1 0 0 1" << endl << "fillColor 1 0 0 1" << endl;
+      *pfout << "dot " << x << ' ' << o.y << ' ' << 1 << endl;
+      *pfout << "frames " << voronoi_frame << ' ' << voronoi_frame << endl;
+      *pfout << "lineColor 0 1 0 1" << endl << "fillColor 1 1 1 0" << endl;
+      *pfout << "circle " << o.x << ' ' << o.y << ' ' << (x-o.x) << endl;
    }
 }
 

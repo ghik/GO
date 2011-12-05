@@ -22,6 +22,7 @@ using namespace std;
 #include "Circle.h"
 #include "Parabola.h"
 #include "RBTreeFigure.h"
+#include "voronoi.h"
 
 GtkWidget *window = NULL, *drawingArea = NULL, *controlHbox = NULL, *posLabel = NULL;
 
@@ -148,20 +149,17 @@ Figure* parseFigure(const string& fig, istringstream& str) {
 	return NULL;
 }
 
-vector<Figure*>* parseFigures(const char* filename) {
+vector<Figure*>* parseFigures(istream& str) {
 	vector<Figure*>* res = new vector<Figure*>;
-	ifstream fin(filename);
-	if(!fin.is_open()) {
-		return NULL;
-	}
 	double lineColor[4] = { 0, 0, 0, 1 };
 	double fillColor[4] = { 1, 1, 1, 0 };
 	double labelColor[4] = { 0, 0, 0, 1 };
 	char buf[1000];
 	string cmd, label;
+	frame = maxframe = 0;
 	int begframe = 0, endframe = INT_MAX;
-	while (!fin.eof()) {
-		fin.getline(buf, 1000);
+	while (!str.eof()) {
+		str.getline(buf, 1000);
 
 		if(strlen(buf) == 0) {
 			continue;
@@ -240,11 +238,13 @@ void paint(cairo_t* cr) {
 	cairo_set_scaled_font(cr, scaledFont);
 	cairo_set_font_size(cr, FONT_SIZE);
 
-	for (vector<Figure*>::iterator it = figures->begin(); it != figures->end();
-			it++) {
-		if (frame >= (*it)->begframe
-				&& ((*it)->endframe < 0 || frame <= (*it)->endframe)) {
-			(*it)->draw(cr);
+	if(figures != NULL) {
+		for (vector<Figure*>::iterator it = figures->begin(); it != figures->end();
+				it++) {
+			if (frame >= (*it)->begframe
+					&& ((*it)->endframe < 0 || frame <= (*it)->endframe)) {
+				(*it)->draw(cr);
+			}
 		}
 	}
 
@@ -494,7 +494,14 @@ void load(const char* filename) {
 	g_static_mutex_lock(&mutex);
 	draggables.clear();
 	free_figures();
-	figures = parseFigures(filename);
+
+	ifstream fin(filename);
+	if(fin.is_open()) {
+		figures = parseFigures(fin);
+	} else {
+		figures = NULL;
+	}
+
 	g_static_mutex_unlock(&mutex);
 	gtk_widget_queue_draw(drawingArea);
 }
@@ -536,6 +543,31 @@ bool generic_loadsave_handler(GtkButton* button, gpointer data) {
 	return true;
 }
 
+bool voronoi_handler(GtkButton* button, gpointer data) {
+	vector<point> pts;
+	g_static_mutex_lock(&mutex);
+
+	for(vector<Figure*>::iterator it=figures->begin();it!=figures->end();it++) {
+		Dot* dot = dynamic_cast<Dot*>(*it);
+		if(dot != NULL) {
+			pts.push_back(point(dot->x, dot->y));
+		}
+	}
+
+	g_static_mutex_unlock(&mutex);
+
+	stringstream ss;
+	voronoi(pts, ss);
+
+	g_static_mutex_lock(&mutex);
+	free_figures();
+	figures = parseFigures(ss);
+	g_static_mutex_unlock(&mutex);
+
+	gtk_widget_queue_draw(drawingArea);
+	return true;
+}
+
 bool clear_handler(GtkButton* button, gpointer data) {
 	clear();
 	return true;
@@ -543,25 +575,28 @@ bool clear_handler(GtkButton* button, gpointer data) {
 
 GtkWidget* create_control_gui() {
 	GtkWidget* hbox = gtk_hbox_new(false, 5);
-	GtkWidget *loadbut, *savebut, *saverawbut, *saveimgbut, *clearbut;
+	GtkWidget *loadbut, *savebut, *saverawbut, *saveimgbut, *clearbut, *voronoibut;
 
 	loadbut = gtk_button_new_with_label("Load");
 	savebut = gtk_button_new_with_label("Save");
 	saverawbut = gtk_button_new_with_label("Save raw");
 	saveimgbut = gtk_button_new_with_label("Save image");
 	clearbut = gtk_button_new_with_label("Clear");
+	voronoibut = gtk_button_new_with_label("Compute Voronoi diagram");
 
 	g_signal_connect(G_OBJECT(loadbut), "clicked", G_CALLBACK(generic_loadsave_handler), (gpointer)load);
 	g_signal_connect(G_OBJECT(savebut), "clicked", G_CALLBACK(generic_loadsave_handler), (gpointer)save);
 	g_signal_connect(G_OBJECT(saverawbut), "clicked", G_CALLBACK(generic_loadsave_handler), (gpointer)saveraw);
 	g_signal_connect(G_OBJECT(saveimgbut), "clicked", G_CALLBACK(generic_loadsave_handler), (gpointer)saveimg);
 	g_signal_connect(G_OBJECT(clearbut), "clicked", G_CALLBACK(clear_handler), NULL);
+	g_signal_connect(G_OBJECT(voronoibut), "clicked", G_CALLBACK(voronoi_handler), NULL);
 
 	gtk_container_add(GTK_CONTAINER(hbox), GTK_WIDGET(loadbut));
 	gtk_container_add(GTK_CONTAINER(hbox), GTK_WIDGET(savebut));
 	gtk_container_add(GTK_CONTAINER(hbox), GTK_WIDGET(saverawbut));
 	gtk_container_add(GTK_CONTAINER(hbox), GTK_WIDGET(saveimgbut));
 	gtk_container_add(GTK_CONTAINER(hbox), GTK_WIDGET(clearbut));
+	gtk_container_add(GTK_CONTAINER(hbox), GTK_WIDGET(voronoibut));
 
 	return hbox;
 }
@@ -660,7 +695,12 @@ int main(int argc, char *argv[]) {
 			GDK_ALL_EVENTS_MASK);
 
 	if(argc > 1) {
-		figures = parseFigures(argv[1]);
+		ifstream fin(argv[1]);
+		if(fin.is_open()) {
+			figures = parseFigures(fin);
+		} else {
+			figures = NULL;
+		}
 	}
 	if(figures == NULL) {
 		figures = new vector<Figure*>;

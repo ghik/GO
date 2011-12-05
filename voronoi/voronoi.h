@@ -1,3 +1,6 @@
+#ifndef VORONOI_H_
+#define VORONOI_H_
+
 #include <iostream>
 #include <fstream>
 #include <queue>
@@ -6,13 +9,16 @@
 
 using namespace std;
 
-ofstream fout;
-int frame = 0;
+extern ostream* pfout;
+extern int voronoi_frame;
 
 // Notation for working with points
-typedef pair<double, double> point;
-#define x first
-#define y second
+
+struct point {
+	double x, y;
+	point(): x(0), y(0) {}
+	point(double _x, double _y): x(_x), y(_y) {}
+};
 
 // Arc, event, and segment datatypes
 struct arc;
@@ -39,7 +45,7 @@ struct arc {
     : p(pp), prev(a), next(b), e(0), s0(0), s1(0) {}
 };
 
-vector<seg*> output;  // Array of output segments.
+extern vector<seg*> output;  // Array of output segments.
 
 struct seg {
    point start, end;
@@ -54,14 +60,14 @@ struct seg {
 	   if (done)
 		   return;
 	   end = p;
-	   fout << "frames " << frame << " -1\n";
-	   fout << "lineColor 0 0 0 1\n";
-	   fout << "segment " << start.x << ' ' << start.y << ' ' << end.x << ' ' << end.y << endl;
+	   *pfout << "frames " << voronoi_frame << " -1\n";
+	   *pfout << "lineColor 0 0 0 1\n";
+	   *pfout << "segment " << start.x << ' ' << start.y << ' ' << end.x << ' ' << end.y << endl;
 	   done = true;
    }
 };
 
-arc *root = 0; // First item in the parabolic front linked list.
+extern arc *root; // First item in the parabolic front linked list.
 
 // Function declarations
 void process_point();
@@ -83,5 +89,6 @@ struct gt {
    bool operator()(event *a, event *b) {return a->x>b->x;}
 };
 
-// Bounding box coordinates.
-double X0 = 0, X1 = 0, Y0 = 0, Y1 = 0;
+void voronoi(vector<point>& pts, ostream& fout);
+
+#endif
