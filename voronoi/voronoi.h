@@ -90,5 +90,6 @@ struct gt {
 };
 
 void voronoi(vector<point>& pts, ostream& fout);
+void fout_paraboles(double x);
 
 #endif
