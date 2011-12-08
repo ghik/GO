@@ -1,0 +1,1177 @@
+frames 0 -1
+fillColor 0 0 0 1
+dot 793 288 2
+dot 487 322 2
+dot 628 427 2
+dot 359 523 2
+dot 602 729 2
+dot 889 596 2
+dot 584 553 2
+dot 895 397 2
+dot 1094 637 2
+dot 892 735 2
+dot 457 681 2
+frames 1 1
+lineColor 1 0 0 1
+line 359 0 90
+frames 1 1
+lineColor 0 0 1 1
+segment 359 523 0 0
+frames 2 2
+lineColor 1 0 0 1
+line 457 0 90
+frames 2 2
+lineColor 0 0 1 1
+parabola 408 523 -0.00510204 -147.2 681
+lineColor 0 0 0 1
+segment 280.633 681 280.633 681
+lineColor 0 0 1 1
+segment 457 681 280.633 681
+lineColor 0 0 0 1
+segment 280.633 681 280.633 681
+lineColor 0 0 1 1
+parabola 408 523 -0.00510204 681 882.2
+frames 3 3
+lineColor 1 0 0 1
+line 487 0 90
+frames 3 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 758.293 508.719 1
+frames 3 3
+lineColor 0 0 1 1
+parabola 423 523 -0.00390625 -147.2 322
+lineColor 0 0 0 1
+segment 265.184 322 265.184 322
+lineColor 0 0 1 1
+segment 487 322 265.184 322
+lineColor 0 0 0 1
+segment 265.184 322 265.184 322
+lineColor 0 0 1 1
+parabola 423 523 -0.00390625 322 611.803
+lineColor 0 0 0 1
+segment 280.633 681 392.196 611.803
+lineColor 0 0 1 1
+parabola 472 681 -0.0166667 611.803 846.932
+lineColor 0 0 0 1
+segment 280.633 681 13.1097 846.932
+lineColor 0 0 1 1
+parabola 423 523 -0.00390625 846.932 882.2
+frames 4 4
+lineColor 1 0 0 1
+line 584 0 90
+frames 4 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 620.001 460.008 1
+frames 4 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 584.602 564.833 1
+frames 4 4
+lineColor 0 0 1 1
+parabola 471.5 523 -0.00222222 -147.2 -105.353
+lineColor 0 0 0 1
+segment 265.184 322 -405.894 -105.353
+lineColor 0 0 1 1
+parabola 535.5 322 -0.00515464 -105.353 444.712
+lineColor 0 0 0 1
+segment 265.184 322 457.88 444.712
+lineColor 0 0 1 1
+parabola 471.5 523 -0.00222222 444.712 553
+lineColor 0 0 0 1
+segment 469.5 553 469.5 553
+lineColor 0 0 1 1
+segment 584 553 469.5 553
+lineColor 0 0 0 1
+segment 469.5 553 469.5 553
+lineColor 0 0 1 1
+parabola 471.5 523 -0.00222222 553 565.051
+lineColor 0 0 0 1
+segment 280.633 681 467.57 565.051
+lineColor 0 0 1 1
+parabola 520.5 681 -0.00393701 565.051 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -566.536 1206.46
+lineColor 0 0 1 1
+parabola 471.5 523 -0.00222222 882.2 882.2
+frames 5 5
+lineColor 1 0 0 1
+line 584.602 0 90
+frames 5 -1
+lineColor 0 0 0 1
+segment 469.5 553 467.922 564.833
+frames 5 -1
+lineColor 0 0 0 1
+segment 280.633 681 467.922 564.833
+frames 5 5
+lineColor 0 0 1 1
+parabola 471.801 523 -0.0022163 -147.2 -107.518
+lineColor 0 0 0 1
+segment 265.184 322 -409.293 -107.518
+lineColor 0 0 1 1
+parabola 535.801 322 -0.00512287 -107.518 444.988
+lineColor 0 0 0 1
+segment 265.184 322 458.313 444.988
+lineColor 0 0 1 1
+parabola 471.801 523 -0.0022163 444.988 541.327
+lineColor 0 0 0 1
+segment 469.5 553 471.056 541.327
+lineColor 0 0 1 1
+parabola 584.301 553 -0.831153 541.327 564.833
+lineColor 0 0 0 1
+segment 467.922 564.833 467.922 564.833
+lineColor 0 0 1 1
+parabola 520.801 681 -0.00391845 564.833 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -570.015 1208.62
+lineColor 0 0 1 1
+parabola 471.801 523 -0.0022163 882.2 882.2
+frames 6 6
+lineColor 1 0 0 1
+line 602 0 90
+frames 6 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 648.012 645.479 1
+frames 6 6
+lineColor 0 0 1 1
+parabola 480.5 523 -0.00205761 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -507.096 -169.8
+lineColor 0 0 1 1
+parabola 544.5 322 -0.00434783 -147.2 452.628
+lineColor 0 0 0 1
+segment 265.184 322 470.31 452.628
+lineColor 0 0 1 1
+parabola 480.5 523 -0.00205761 452.628 488.678
+lineColor 0 0 0 1
+segment 469.5 553 478.076 488.678
+lineColor 0 0 1 1
+parabola 593 553 -0.0277778 488.678 607.393
+lineColor 0 0 0 1
+segment 467.922 564.833 510.817 607.393
+lineColor 0 0 1 1
+parabola 529.5 681 -0.00344828 607.393 729
+lineColor 0 0 0 1
+segment 521.555 729 521.555 729
+lineColor 0 0 1 1
+segment 602 729 521.555 729
+lineColor 0 0 0 1
+segment 521.555 729 521.555 729
+lineColor 0 0 1 1
+parabola 529.5 681 -0.00344828 729 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -670.426 1270.9
+lineColor 0 0 1 1
+parabola 480.5 523 -0.00205761 882.2 882.2
+frames 7 7
+lineColor 1 0 0 1
+line 620.001 0 90
+frames 7 -1
+lineColor 0 0 0 1
+segment 265.184 322 481.899 460.008
+frames 7 -1
+lineColor 0 0 0 1
+segment 469.5 553 481.899 460.008
+frames 7 7
+lineColor 0 0 1 1
+parabola 489.5 523 -0.0019157 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -607.461 -233.714
+lineColor 0 0 1 1
+parabola 553.5 322 -0.00375937 -147.2 460.008
+lineColor 0 0 0 1
+segment 481.899 460.008 481.899 460.008
+lineColor 0 0 1 1
+parabola 602 553 -0.0138885 460.008 625.478
+lineColor 0 0 0 1
+segment 467.922 564.833 529.044 625.478
+lineColor 0 0 1 1
+parabola 538.5 681 -0.00306747 625.478 677.9
+lineColor 0 0 0 1
+segment 521.555 729 538.471 677.9
+lineColor 0 0 1 1
+parabola 611 729 -0.0277762 677.9 792.018
+lineColor 0 0 0 1
+segment 521.555 729 500.694 792.018
+lineColor 0 0 1 1
+parabola 538.5 681 -0.00306747 792.018 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -773.958 1335.11
+lineColor 0 0 1 1
+parabola 489.5 523 -0.0019157 882.2 882.2
+frames 8 8
+lineColor 1 0 0 1
+line 628 0 90
+frames 8 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 630.544 452.722 1
+frames 8 8
+lineColor 0 0 1 1
+parabola 493.5 523 -0.00185874 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -651.855 -261.985
+lineColor 0 0 1 1
+parabola 557.5 322 -0.0035461 -147.2 427
+lineColor 0 0 0 1
+segment 518.404 427 518.404 427
+lineColor 0 0 1 1
+segment 628 427 518.404 427
+lineColor 0 0 0 1
+segment 518.404 427 518.404 427
+lineColor 0 0 1 1
+parabola 557.5 322 -0.0035461 427 454.342
+lineColor 0 0 0 1
+segment 481.899 460.008 495.392 454.342
+lineColor 0 0 1 1
+parabola 606 553 -0.0113636 454.342 631.808
+lineColor 0 0 0 1
+segment 467.922 564.833 535.424 631.808
+lineColor 0 0 1 1
+parabola 542.5 681 -0.00292398 631.808 667.37
+lineColor 0 0 0 1
+segment 521.555 729 541.957 667.37
+lineColor 0 0 1 1
+parabola 615 729 -0.0192308 667.37 807.844
+lineColor 0 0 0 1
+segment 521.555 729 495.455 807.844
+lineColor 0 0 1 1
+parabola 542.5 681 -0.00292398 807.844 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -819.872 1363.59
+lineColor 0 0 1 1
+parabola 493.5 523 -0.00185874 882.2 882.2
+frames 9 9
+lineColor 1 0 0 1
+line 630.544 0 90
+frames 9 -1
+lineColor 0 0 0 1
+segment 518.404 427 499.25 452.722
+frames 9 -1
+lineColor 0 0 0 1
+segment 481.899 460.008 499.25 452.722
+frames 9 9
+lineColor 0 0 1 1
+parabola 494.772 523 -0.00184132 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -665.953 -270.962
+lineColor 0 0 1 1
+parabola 558.772 322 -0.00348325 -147.2 405.067
+lineColor 0 0 0 1
+segment 518.404 427 534.737 405.067
+lineColor 0 0 1 1
+parabola 629.272 427 -0.19652 405.067 452.722
+lineColor 0 0 0 1
+segment 499.25 452.722 499.25 452.722
+lineColor 0 0 1 1
+parabola 607.272 553 -0.0107425 452.722 633.693
+lineColor 0 0 0 1
+segment 467.922 564.833 537.324 633.693
+lineColor 0 0 1 1
+parabola 543.772 681 -0.00288111 633.693 664.31
+lineColor 0 0 0 1
+segment 521.555 729 542.97 664.31
+lineColor 0 0 1 1
+parabola 616.272 729 -0.0175167 664.31 812.588
+lineColor 0 0 0 1
+segment 521.555 729 493.885 812.588
+lineColor 0 0 1 1
+parabola 543.772 681 -0.00288111 812.588 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -834.466 1372.64
+lineColor 0 0 1 1
+parabola 494.772 523 -0.00184132 882.2 882.2
+frames 10 10
+lineColor 1 0 0 1
+line 648.012 0 90
+frames 10 -1
+lineColor 0 0 0 1
+segment 467.922 564.833 549.203 645.479
+frames 10 -1
+lineColor 0 0 0 1
+segment 521.555 729 549.203 645.479
+frames 10 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 1294.94 605.766 1
+frames 10 10
+lineColor 0 0 1 1
+parabola 503.506 523 -0.00173003 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -762.493 -332.441
+lineColor 0 0 1 1
+parabola 567.506 322 -0.00310535 -147.2 371.128
+lineColor 0 0 0 1
+segment 518.404 427 560.011 371.128
+lineColor 0 0 1 1
+parabola 638.006 427 -0.0249846 371.128 478.256
+lineColor 0 0 0 1
+segment 499.25 452.722 572.368 478.256
+lineColor 0 0 1 1
+parabola 616.006 553 -0.00781099 478.256 645.479
+lineColor 0 0 0 1
+segment 549.203 645.479 549.203 645.479
+lineColor 0 0 1 1
+parabola 625.006 729 -0.0108666 645.479 842.984
+lineColor 0 0 0 1
+segment 521.555 729 483.822 842.984
+lineColor 0 0 1 1
+parabola 552.506 681 -0.00261763 842.984 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -934.545 1434.72
+lineColor 0 0 1 1
+parabola 503.506 523 -0.00173003 882.2 882.2
+frames 11 11
+lineColor 1 0 0 1
+line 758.293 0 90
+frames 11 11
+lineColor 0 0 1 1
+parabola 558.647 523 -0.00125221 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -1365.98 -716.75
+lineColor 0 0 1 1
+parabola 622.647 322 -0.00184302 -147.2 289.613
+lineColor 0 0 0 1
+segment 518.404 427 620.714 289.613
+lineColor 0 0 1 1
+parabola 693.147 427 -0.0038375 289.613 510.981
+lineColor 0 0 0 1
+segment 499.25 452.722 666.082 510.981
+lineColor 0 0 1 1
+parabola 671.147 553 -0.00286873 510.981 634.98
+lineColor 0 0 0 1
+segment 549.203 645.479 651.867 634.98
+lineColor 0 0 1 1
+parabola 680.147 729 -0.00319911 634.98 882.2
+lineColor 0 0 0 1
+segment 521.555 729 428.759 1009.32
+lineColor 0 0 1 1
+parabola 607.647 681 -0.00165951 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -1563.45 1824.8
+lineColor 0 0 1 1
+parabola 558.647 523 -0.00125221 882.2 882.2
+frames 12 12
+lineColor 1 0 0 1
+line 793 0 90
+frames 12 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 794.137 269.075 1
+frames 12 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 1243.32 596.927 1
+frames 12 12
+lineColor 0 0 1 1
+parabola 576 523 -0.00115207 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -1554.74 -836.957
+lineColor 0 0 1 1
+parabola 640 322 -0.00163399 -147.2 269.713
+lineColor 0 0 0 1
+segment 518.404 427 635.533 269.713
+lineColor 0 0 1 1
+parabola 710.5 427 -0.0030303 269.713 288
+lineColor 0 0 0 1
+segment 651.952 288 651.952 288
+lineColor 0 0 1 1
+segment 793 288 651.952 288
+lineColor 0 0 0 1
+segment 651.952 288 651.952 288
+lineColor 0 0 1 1
+parabola 710.5 427 -0.0030303 288 517.773
+lineColor 0 0 0 1
+segment 499.25 452.722 685.531 517.773
+lineColor 0 0 1 1
+parabola 688.5 553 -0.00239234 517.773 632.791
+lineColor 0 0 0 1
+segment 549.203 645.479 673.269 632.791
+lineColor 0 0 1 1
+parabola 697.5 729 -0.0026178 632.791 882.2
+lineColor 0 0 0 1
+segment 521.555 729 412.288 1059.08
+lineColor 0 0 1 1
+parabola 625 681 -0.0014881 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -1760.78 1947.19
+lineColor 0 0 1 1
+parabola 576 523 -0.00115207 882.2 882.2
+frames 13 13
+lineColor 1 0 0 1
+line 794.137 0 90
+frames 13 -1
+lineColor 0 0 0 1
+segment 518.404 427 636.008 269.075
+frames 13 -1
+lineColor 0 0 0 1
+segment 651.952 288 636.008 269.075
+frames 13 13
+lineColor 0 0 1 1
+parabola 576.568 523 -0.00114906 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -1560.92 -840.89
+lineColor 0 0 1 1
+parabola 640.568 322 -0.00162794 -147.2 269.075
+lineColor 0 0 0 1
+segment 636.008 269.075 636.008 269.075
+lineColor 0 0 1 1
+parabola 793.568 288 -0.439901 269.075 305.01
+lineColor 0 0 0 1
+segment 651.952 288 666.281 305.01
+lineColor 0 0 1 1
+parabola 711.068 427 -0.00300957 305.01 517.99
+lineColor 0 0 0 1
+segment 499.25 452.722 686.152 517.99
+lineColor 0 0 1 1
+parabola 689.068 553 -0.0023794 517.99 632.721
+lineColor 0 0 0 1
+segment 549.203 645.479 673.946 632.721
+lineColor 0 0 1 1
+parabola 698.068 729 -0.00260231 632.721 882.2
+lineColor 0 0 0 1
+segment 521.555 729 411.752 1060.7
+lineColor 0 0 1 1
+parabola 625.568 681 -0.00148308 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -1767.24 1951.2
+lineColor 0 0 1 1
+parabola 576.568 523 -0.00114906 882.2 882.2
+frames 14 14
+lineColor 1 0 0 1
+line 889 0 90
+frames 14 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 900.231 537.398 1
+frames 14 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 891.993 627.082 1
+frames 14 14
+lineColor 0 0 1 1
+parabola 624 523 -0.000943396 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -2075.51 -1168.59
+lineColor 0 0 1 1
+parabola 688 322 -0.00124378 -147.2 79.6759
+lineColor 0 0 0 1
+segment 636.008 269.075 614.964 79.6759
+lineColor 0 0 1 1
+parabola 841 288 -0.00520833 79.6759 414.1
+lineColor 0 0 0 1
+segment 651.952 288 758.181 414.1
+lineColor 0 0 1 1
+parabola 758.5 427 -0.00191571 414.1 535.394
+lineColor 0 0 0 1
+segment 499.25 452.722 735.992 535.394
+lineColor 0 0 1 1
+parabola 736.5 553 -0.00163934 535.394 596
+lineColor 0 0 0 1
+segment 733.469 596 733.469 596
+lineColor 0 0 1 1
+segment 889 596 733.469 596
+lineColor 0 0 0 1
+segment 733.469 596 733.469 596
+lineColor 0 0 1 1
+parabola 736.5 553 -0.00163934 596 627.248
+lineColor 0 0 0 1
+segment 549.203 645.479 727.463 627.248
+lineColor 0 0 1 1
+parabola 745.5 729 -0.00174216 627.248 882.2
+lineColor 0 0 0 1
+segment 521.555 729 367.322 1194.91
+lineColor 0 0 1 1
+parabola 673 681 -0.00115741 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -2305.88 2285.29
+lineColor 0 0 1 1
+parabola 624 523 -0.000943396 882.2 882.2
+frames 15 15
+lineColor 1 0 0 1
+line 891.993 0 90
+frames 15 -1
+lineColor 0 0 0 1
+segment 733.469 596 729.087 627.082
+frames 15 -1
+lineColor 0 0 0 1
+segment 549.203 645.479 729.087 627.082
+frames 15 15
+lineColor 0 0 1 1
+parabola 625.496 523 -0.000938099 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -2091.72 -1178.92
+lineColor 0 0 1 1
+parabola 689.496 322 -0.00123459 -147.2 75.5405
+lineColor 0 0 0 1
+segment 636.008 269.075 614.504 75.5405
+lineColor 0 0 1 1
+parabola 842.496 288 -0.00505088 75.5405 415.982
+lineColor 0 0 0 1
+segment 651.952 288 759.766 415.982
+lineColor 0 0 1 1
+parabola 759.996 427 -0.00189399 415.982 535.929
+lineColor 0 0 0 1
+segment 499.25 452.722 737.523 535.929
+lineColor 0 0 1 1
+parabola 737.996 553 -0.00162342 535.929 565.762
+lineColor 0 0 0 1
+segment 733.469 596 737.732 565.762
+lineColor 0 0 1 1
+parabola 890.496 596 -0.167075 565.762 627.082
+lineColor 0 0 0 1
+segment 729.087 627.082 729.087 627.082
+lineColor 0 0 1 1
+parabola 746.996 729 -0.00172418 627.082 882.2
+lineColor 0 0 0 1
+segment 521.555 729 365.929 1199.12
+lineColor 0 0 1 1
+parabola 674.496 681 -0.00114944 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -2322.86 2295.82
+lineColor 0 0 1 1
+parabola 625.496 523 -0.000938099 882.2 882.2
+frames 16 16
+lineColor 1 0 0 1
+line 892 0 90
+frames 16 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 906.613 668.569 1
+frames 16 16
+lineColor 0 0 1 1
+parabola 625.5 523 -0.000938086 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -2091.76 -1178.94
+lineColor 0 0 1 1
+parabola 689.5 322 -0.00123457 -147.2 75.5304
+lineColor 0 0 0 1
+segment 636.008 269.075 614.503 75.5304
+lineColor 0 0 1 1
+parabola 842.5 288 -0.00505051 75.5304 415.986
+lineColor 0 0 0 1
+segment 651.952 288 759.77 415.986
+lineColor 0 0 1 1
+parabola 760 427 -0.00189394 415.986 535.93
+lineColor 0 0 0 1
+segment 499.25 452.722 737.527 535.93
+lineColor 0 0 1 1
+parabola 738 553 -0.00162338 535.93 565.725
+lineColor 0 0 0 1
+segment 733.469 596 737.737 565.725
+lineColor 0 0 1 1
+parabola 890.5 596 -0.166667 565.725 627.119
+lineColor 0 0 0 1
+segment 729.087 627.082 729.104 627.119
+lineColor 0 0 1 1
+parabola 747 729 -0.00172414 627.119 735
+lineColor 0 0 0 1
+segment 746.938 735 746.938 735
+lineColor 0 0 1 1
+segment 892 735 746.938 735
+lineColor 0 0 0 1
+segment 746.938 735 746.938 735
+lineColor 0 0 1 1
+parabola 747 729 -0.00172414 735 882.2
+lineColor 0 0 0 1
+segment 521.555 729 365.926 1199.13
+lineColor 0 0 1 1
+parabola 674.5 681 -0.00114943 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -2322.9 2295.85
+lineColor 0 0 1 1
+parabola 625.5 523 -0.000938086 882.2 882.2
+frames 17 17
+lineColor 1 0 0 1
+line 895 0 90
+frames 17 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 896.806 418.969 1
+frames 17 17
+lineColor 0 0 1 1
+parabola 627 523 -0.000932836 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -2108.01 -1189.29
+lineColor 0 0 1 1
+parabola 691 322 -0.00122549 -147.2 71.4113
+lineColor 0 0 0 1
+segment 636.008 269.075 614.046 71.4113
+lineColor 0 0 1 1
+parabola 844 288 -0.00490196 71.4113 397
+lineColor 0 0 0 1
+segment 785.76 397 785.76 397
+lineColor 0 0 1 1
+segment 895 397 785.76 397
+lineColor 0 0 0 1
+segment 785.76 397 785.76 397
+lineColor 0 0 1 1
+parabola 844 288 -0.00490196 397 417.854
+lineColor 0 0 0 1
+segment 651.952 288 761.343 417.854
+lineColor 0 0 1 1
+parabola 761.5 427 -0.00187266 417.854 536.466
+lineColor 0 0 0 1
+segment 499.25 452.722 739.06 536.466
+lineColor 0 0 1 1
+parabola 739.5 553 -0.00160772 536.466 553.221
+lineColor 0 0 0 1
+segment 733.469 596 739.5 553.221
+lineColor 0 0 1 1
+parabola 892 596 -0.0833333 553.221 639.431
+lineColor 0 0 0 1
+segment 729.087 627.082 734.81 639.431
+lineColor 0 0 1 1
+parabola 748.5 729 -0.00170648 639.431 705.408
+lineColor 0 0 0 1
+segment 746.938 735 747.55 705.408
+lineColor 0 0 1 1
+parabola 893.5 735 -0.166667 705.408 764.716
+lineColor 0 0 0 1
+segment 746.938 735 746.323 764.716
+lineColor 0 0 1 1
+parabola 748.5 729 -0.00170648 764.716 882.2
+lineColor 0 0 0 1
+segment 521.555 729 364.529 1203.35
+lineColor 0 0 1 1
+parabola 676 681 -0.00114155 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -2339.92 2306.41
+lineColor 0 0 1 1
+parabola 627 523 -0.000932836 882.2 882.2
+frames 18 18
+lineColor 1 0 0 1
+line 896.806 0 90
+frames 18 -1
+lineColor 0 0 0 1
+segment 785.76 397 762.283 418.969
+frames 18 -1
+lineColor 0 0 0 1
+segment 651.952 288 762.283 418.969
+frames 18 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 969.973 549.705 1
+frames 18 18
+lineColor 0 0 1 1
+parabola 627.903 523 -0.000929703 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -2117.79 -1195.52
+lineColor 0 0 1 1
+parabola 691.903 322 -0.00122009 -147.2 68.9437
+lineColor 0 0 0 1
+segment 636.008 269.075 613.772 68.9437
+lineColor 0 0 1 1
+parabola 844.903 288 -0.00481668 68.9437 378.891
+lineColor 0 0 0 1
+segment 785.76 397 805.112 378.891
+lineColor 0 0 1 1
+parabola 895.903 397 -0.276852 378.891 418.969
+lineColor 0 0 0 1
+segment 762.283 418.969 762.283 418.969
+lineColor 0 0 1 1
+parabola 762.403 427 -0.00186008 418.969 536.788
+lineColor 0 0 0 1
+segment 499.25 452.722 739.983 536.788
+lineColor 0 0 1 1
+parabola 740.403 553 -0.00159843 536.788 547.198
+lineColor 0 0 0 1
+segment 733.469 596 740.349 547.198
+lineColor 0 0 1 1
+parabola 892.903 596 -0.0640531 547.198 645.255
+lineColor 0 0 0 1
+segment 729.087 627.082 737.508 645.255
+lineColor 0 0 1 1
+parabola 749.403 729 -0.00169603 645.255 697.45
+lineColor 0 0 0 1
+segment 746.938 735 747.715 697.45
+lineColor 0 0 1 1
+parabola 894.403 735 -0.104036 697.45 772.748
+lineColor 0 0 0 1
+segment 746.938 735 746.157 772.748
+lineColor 0 0 1 1
+parabola 749.403 729 -0.00169603 772.748 882.2
+lineColor 0 0 0 1
+segment 521.555 729 363.689 1205.89
+lineColor 0 0 1 1
+parabola 676.903 681 -0.00113686 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -2350.17 2312.76
+lineColor 0 0 1 1
+parabola 627.903 523 -0.000929703 882.2 882.2
+frames 19 19
+lineColor 1 0 0 1
+line 900.231 0 90
+frames 19 -1
+lineColor 0 0 0 1
+segment 499.25 452.722 741.731 537.398
+frames 19 -1
+lineColor 0 0 0 1
+segment 733.469 596 741.731 537.398
+frames 19 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 927.633 492.839 1
+frames 19 19
+lineColor 0 0 1 1
+parabola 629.616 523 -0.000923819 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -2136.35 -1207.33
+lineColor 0 0 1 1
+parabola 693.616 322 -0.00120998 -147.2 64.2874
+lineColor 0 0 0 1
+segment 636.008 269.075 613.254 64.2874
+lineColor 0 0 1 1
+parabola 846.616 288 -0.00466282 64.2874 367.927
+lineColor 0 0 0 1
+segment 785.76 397 816.828 367.927
+lineColor 0 0 1 1
+parabola 897.616 397 -0.0955787 367.927 434.387
+lineColor 0 0 0 1
+segment 762.283 418.969 764.015 434.387
+lineColor 0 0 1 1
+parabola 764.116 427 -0.00183667 434.387 537.398
+lineColor 0 0 0 1
+segment 741.731 537.398 741.731 537.398
+lineColor 0 0 1 1
+parabola 894.616 596 -0.0445185 537.398 654.583
+lineColor 0 0 0 1
+segment 729.087 627.082 741.831 654.583
+lineColor 0 0 1 1
+parabola 751.116 729 -0.00167655 654.583 685.613
+lineColor 0 0 0 1
+segment 746.938 735 747.96 685.613
+lineColor 0 0 1 1
+parabola 896.116 735 -0.0607438 685.613 784.727
+lineColor 0 0 0 1
+segment 746.938 735 745.909 784.727
+lineColor 0 0 1 1
+parabola 751.116 729 -0.00167655 784.727 882.2
+lineColor 0 0 0 1
+segment 521.555 729 362.095 1210.7
+lineColor 0 0 1 1
+parabola 678.616 681 -0.00112808 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -2369.6 2324.82
+lineColor 0 0 1 1
+parabola 629.616 523 -0.000923819 882.2 882.2
+frames 20 20
+lineColor 1 0 0 1
+line 906.613 0 90
+frames 20 -1
+lineColor 0 0 0 1
+segment 729.087 627.082 748.312 668.569
+frames 20 -1
+lineColor 0 0 0 1
+segment 746.938 735 748.312 668.569
+frames 20 20
+lineColor 0 0 1 1
+parabola 632.807 523 -0.000913053 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -2170.91 -1229.34
+lineColor 0 0 1 1
+parabola 696.807 322 -0.00119157 -147.2 55.6894
+lineColor 0 0 0 1
+segment 636.008 269.075 612.299 55.6894
+lineColor 0 0 1 1
+parabola 849.807 288 -0.00440089 55.6894 356.248
+lineColor 0 0 0 1
+segment 785.76 397 829.308 356.248
+lineColor 0 0 1 1
+parabola 900.807 397 -0.0430534 356.248 452.936
+lineColor 0 0 0 1
+segment 762.283 418.969 766.1 452.936
+lineColor 0 0 1 1
+parabola 767.307 427 -0.0017946 452.936 523.949
+lineColor 0 0 0 1
+segment 741.731 537.398 750.439 523.949
+lineColor 0 0 1 1
+parabola 897.807 596 -0.0283874 523.949 668.569
+lineColor 0 0 0 1
+segment 748.312 668.569 748.312 668.569
+lineColor 0 0 1 1
+parabola 899.307 735 -0.034215 668.569 802.036
+lineColor 0 0 0 1
+segment 746.938 735 745.551 802.036
+lineColor 0 0 1 1
+parabola 754.307 729 -0.00164142 802.036 882.2
+lineColor 0 0 0 1
+segment 521.555 729 359.128 1219.67
+lineColor 0 0 1 1
+parabola 681.807 681 -0.00111207 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -2405.81 2347.27
+lineColor 0 0 1 1
+parabola 632.807 523 -0.000913053 882.2 882.2
+frames 21 21
+lineColor 1 0 0 1
+line 927.633 0 90
+frames 21 -1
+lineColor 0 0 0 1
+segment 762.283 418.969 770.583 492.839
+frames 21 -1
+lineColor 0 0 0 1
+segment 741.731 537.398 770.583 492.839
+frames 21 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 7427.23 594.976 1
+frames 21 21
+lineColor 0 0 1 1
+parabola 643.317 523 -0.000879302 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -2284.71 -1301.81
+lineColor 0 0 1 1
+parabola 707.317 322 -0.00113473 -147.2 27.9771
+lineColor 0 0 0 1
+segment 636.008 269.075 609.22 27.9771
+lineColor 0 0 1 1
+parabola 860.317 288 -0.0037138 27.9771 334.864
+lineColor 0 0 0 1
+segment 785.76 397 852.16 334.864
+lineColor 0 0 1 1
+parabola 911.317 397 -0.0153219 334.864 492.839
+lineColor 0 0 0 1
+segment 770.583 492.839 770.583 492.839
+lineColor 0 0 1 1
+parabola 908.317 596 -0.0129423 492.839 666.504
+lineColor 0 0 0 1
+segment 748.312 668.569 843.983 666.504
+lineColor 0 0 1 1
+parabola 909.817 735 -0.0140319 666.504 843.479
+lineColor 0 0 0 1
+segment 746.938 735 744.694 843.479
+lineColor 0 0 1 1
+parabola 764.817 729 -0.00153547 843.479 882.2
+lineColor 0 0 0 1
+segment 521.555 729 349.363 1249.16
+lineColor 0 0 1 1
+parabola 692.317 681 -0.0010624 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -2525.04 2421.23
+lineColor 0 0 1 1
+parabola 643.317 523 -0.000879302 882.2 882.2
+frames 22 22
+lineColor 1 0 0 1
+line 969.973 0 90
+frames 22 22
+lineColor 0 0 1 1
+parabola 664.487 523 -0.000818367 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -2513.82 -1447.72
+lineColor 0 0 1 1
+parabola 728.487 322 -0.00103525 -147.2 -25.8208
+lineColor 0 0 0 1
+segment 636.008 269.075 603.242 -25.8208
+lineColor 0 0 1 1
+parabola 881.487 288 -0.00282529 -25.8208 308.536
+lineColor 0 0 0 1
+segment 785.76 397 880.295 308.536
+lineColor 0 0 1 1
+parabola 932.487 397 -0.00666907 308.536 495.76
+lineColor 0 0 0 1
+segment 770.583 492.839 867.44 495.76
+lineColor 0 0 1 1
+parabola 929.487 596 -0.0061749 495.76 665.299
+lineColor 0 0 0 1
+segment 748.312 668.569 899.833 665.299
+lineColor 0 0 1 1
+parabola 930.987 735 -0.00641248 665.299 882.2
+lineColor 0 0 0 1
+segment 746.938 735 743.399 906.036
+lineColor 0 0 1 1
+parabola 785.987 729 -0.0013588 882.2 882.2
+lineColor 0 0 0 1
+segment 521.555 729 329.733 1308.46
+lineColor 0 0 1 1
+parabola 713.487 681 -0.00097471 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -2765.14 2570.15
+lineColor 0 0 1 1
+parabola 664.487 523 -0.000818367 882.2 882.2
+frames 23 23
+lineColor 1 0 0 1
+line 1094 0 90
+frames 23 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 1172.85 500.201 1
+frames 23 -1
+lineColor 1 0 0 1
+fillColor 1 0 0 1
+dot 1097.1 663.523 1
+frames 23 23
+lineColor 0 0 1 1
+parabola 726.5 523 -0.000680272 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -3184.29 -1874.68
+lineColor 0 0 1 1
+parabola 790.5 322 -0.000823723 -147.2 -147.2
+lineColor 0 0 0 1
+segment 636.008 269.075 586.609 -175.517
+lineColor 0 0 1 1
+parabola 943.5 288 -0.00166113 -147.2 251.465
+lineColor 0 0 0 1
+segment 785.76 397 941.283 251.465
+lineColor 0 0 1 1
+parabola 994.5 397 -0.00251256 251.465 498.805
+lineColor 0 0 0 1
+segment 770.583 492.839 968.459 498.805
+lineColor 0 0 1 1
+parabola 991.5 596 -0.00243902 498.805 637
+lineColor 0 0 0 1
+segment 987.4 637 987.4 637
+lineColor 0 0 1 1
+segment 1094 637 987.4 637
+lineColor 0 0 0 1
+segment 987.4 637 987.4 637
+lineColor 0 0 1 1
+parabola 991.5 596 -0.00243902 637 663.56
+lineColor 0 0 0 1
+segment 748.312 668.569 980.367 663.56
+lineColor 0 0 1 1
+parabola 993 735 -0.00247525 663.56 882.2
+lineColor 0 0 0 1
+segment 746.938 735 740.328 1054.5
+lineColor 0 0 1 1
+parabola 848 729 -0.00101626 882.2 882.2
+lineColor 0 0 0 1
+segment 521.555 729 272.428 1481.57
+lineColor 0 0 1 1
+parabola 775.5 681 -0.000784929 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -3468.08 3006.15
+lineColor 0 0 1 1
+parabola 726.5 523 -0.000680272 882.2 882.2
+frames 24 24
+lineColor 1 0 0 1
+line 1097.1 0 90
+frames 24 -1
+lineColor 0 0 0 1
+segment 987.4 637 982.095 663.523
+frames 24 -1
+lineColor 0 0 0 1
+segment 748.312 668.569 982.095 663.523
+frames 24 24
+lineColor 0 0 1 1
+parabola 728.05 523 -0.000677415 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -3201.04 -1885.34
+lineColor 0 0 1 1
+parabola 792.05 322 -0.000819537 -147.2 -147.2
+lineColor 0 0 0 1
+segment 636.008 269.075 586.203 -179.173
+lineColor 0 0 1 1
+parabola 945.05 288 -0.00164419 -147.2 250.144
+lineColor 0 0 0 1
+segment 785.76 397 942.694 250.144
+lineColor 0 0 1 1
+parabola 996.05 397 -0.00247402 250.144 498.863
+lineColor 0 0 0 1
+segment 770.583 492.839 970.379 498.863
+lineColor 0 0 1 1
+parabola 993.05 596 -0.00240269 498.863 611.717
+lineColor 0 0 0 1
+segment 987.4 637 992.457 611.717
+lineColor 0 0 1 1
+parabola 1095.55 637 -0.161277 611.717 663.523
+lineColor 0 0 0 1
+segment 982.095 663.523 982.095 663.523
+lineColor 0 0 1 1
+parabola 994.55 735 -0.00243783 663.523 882.2
+lineColor 0 0 0 1
+segment 746.938 735 740.256 1057.97
+lineColor 0 0 1 1
+parabola 849.55 729 -0.0010099 882.2 882.2
+lineColor 0 0 0 1
+segment 521.555 729 270.999 1485.89
+lineColor 0 0 1 1
+parabola 777.05 681 -0.000781128 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -3485.64 3017.04
+lineColor 0 0 1 1
+parabola 728.05 523 -0.000677415 882.2 882.2
+frames 25 25
+lineColor 1 0 0 1
+line 1172.85 0 90
+frames 25 -1
+lineColor 0 0 0 1
+segment 770.583 492.839 1014.76 500.201
+frames 25 -1
+lineColor 0 0 0 1
+segment 987.4 637 1014.76 500.201
+frames 25 25
+lineColor 0 0 1 1
+parabola 765.926 523 -0.000614363 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -3610.18 -2145.9
+lineColor 0 0 1 1
+parabola 829.926 322 -0.000729021 -147.2 -147.2
+lineColor 0 0 0 1
+segment 636.008 269.075 576.36 -267.76
+lineColor 0 0 1 1
+parabola 982.926 288 -0.0013163 -147.2 218.454
+lineColor 0 0 0 1
+segment 785.76 397 976.559 218.454
+lineColor 0 0 1 1
+parabola 1033.93 397 -0.00179952 218.454 500.201
+lineColor 0 0 0 1
+segment 1014.76 500.201 1014.76 500.201
+lineColor 0 0 1 1
+parabola 1133.43 637 -0.00634106 500.201 764.147
+lineColor 0 0 0 1
+segment 982.095 663.523 1030.91 764.147
+lineColor 0 0 1 1
+parabola 1032.43 735 -0.0017803 764.147 882.2
+lineColor 0 0 0 1
+segment 746.938 735 738.532 1141.3
+lineColor 0 0 1 1
+parabola 887.426 729 -0.000875885 882.2 882.2
+lineColor 0 0 0 1
+segment 521.555 729 236.091 1591.34
+lineColor 0 0 1 1
+parabola 814.926 681 -0.000698469 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -3914.78 3283.22
+lineColor 0 0 1 1
+parabola 765.926 523 -0.000614363 882.2 882.2
+frames 26 26
+lineColor 1 0 0 1
+line 1243.32 0 90
+frames 26 26
+lineColor 0 0 1 1
+parabola 801.162 523 -0.000565404 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -3990.67 -2388.2
+lineColor 0 0 1 1
+parabola 865.162 322 -0.000661092 -147.2 -147.2
+lineColor 0 0 0 1
+segment 636.008 269.075 567.308 -349.229
+lineColor 0 0 1 1
+parabola 1018.16 288 -0.00111031 -147.2 189.586
+lineColor 0 0 0 1
+segment 785.76 397 1007.41 189.586
+lineColor 0 0 1 1
+parabola 1069.16 397 -0.00143545 189.586 459.784
+lineColor 0 0 0 1
+segment 1014.76 500.201 1063.5 459.784
+lineColor 0 0 1 1
+parabola 1168.66 637 -0.00334842 459.784 819.131
+lineColor 0 0 0 1
+segment 982.095 663.523 1057.59 819.131
+lineColor 0 0 1 1
+parabola 1067.66 735 -0.00142319 819.131 882.2
+lineColor 0 0 0 1
+segment 746.938 735 736.965 1217.04
+lineColor 0 0 1 1
+parabola 922.662 729 -0.000779637 882.2 882.2
+lineColor 0 0 0 1
+segment 521.555 729 203.652 1689.33
+lineColor 0 0 1 1
+parabola 850.162 681 -0.00063587 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -4313.92 3530.79
+lineColor 0 0 1 1
+parabola 801.162 523 -0.000565404 882.2 882.2
+frames 27 27
+lineColor 1 0 0 1
+line 1294.94 0 90
+frames 27 27
+lineColor 0 0 1 1
+parabola 826.97 523 -0.000534223 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -4269.28 -2565.62
+lineColor 0 0 1 1
+parabola 890.97 322 -0.000618859 -147.2 -147.2
+lineColor 0 0 0 1
+segment 636.008 269.075 560.721 -408.507
+lineColor 0 0 1 1
+parabola 1043.97 288 -0.000996137 -147.2 168.651
+lineColor 0 0 0 1
+segment 785.76 397 1029.78 168.651
+lineColor 0 0 1 1
+parabola 1094.97 397 -0.00125019 168.651 435.207
+lineColor 0 0 0 1
+segment 1014.76 500.201 1093.14 435.207
+lineColor 0 0 1 1
+parabola 1194.47 637 -0.00248832 435.207 855.779
+lineColor 0 0 0 1
+segment 982.095 663.523 1075.37 855.779
+lineColor 0 0 1 1
+parabola 1093.47 735 -0.00124088 855.779 882.2
+lineColor 0 0 0 1
+segment 746.938 735 735.831 1271.86
+lineColor 0 0 1 1
+parabola 948.47 729 -0.000721564 882.2 882.2
+lineColor 0 0 0 1
+segment 521.555 729 179.911 1761.05
+lineColor 0 0 1 1
+parabola 875.97 681 -0.000596702 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -4606.22 3712.09
+lineColor 0 0 1 1
+parabola 826.97 523 -0.000534223 882.2 882.2
+frames 28 28
+lineColor 1 0 0 1
+line 7427.23 0 90
+frames 28 28
+lineColor 0 0 1 1
+parabola 3893.12 523 -7.0739e-05 -147.2 -147.2
+lineColor 0 0 0 1
+segment 265.184 322 -37324.2 -23615.5
+lineColor 0 0 1 1
+parabola 3957.12 322 -7.20437e-05 -147.2 -147.2
+lineColor 0 0 0 1
+segment 636.008 269.075 -202.378 -7276.4
+lineColor 0 0 1 1
+parabola 4110.12 288 -7.53666e-05 -147.2 -147.2
+lineColor 0 0 0 1
+segment 785.76 397 3621.95 -2257.05
+lineColor 0 0 1 1
+parabola 4161.12 397 -7.65435e-05 -147.2 -147.2
+lineColor 0 0 0 1
+segment 1014.76 500.201 3791.05 -1801.81
+lineColor 0 0 1 1
+parabola 4260.62 637 -7.89486e-05 -147.2 882.2
+lineColor 0 0 0 1
+segment 982.095 663.523 2947.68 4715.03
+lineColor 0 0 1 1
+parabola 4159.62 735 -7.65084e-05 882.2 882.2
+lineColor 0 0 0 1
+segment 746.938 735 605.932 7550.3
+lineColor 0 0 1 1
+parabola 4014.62 729 -7.32576e-05 882.2 882.2
+lineColor 0 0 0 1
+segment 521.555 729 -2631.49 10253.8
+lineColor 0 0 1 1
+parabola 3942.12 681 -7.17336e-05 882.2 882.2
+lineColor 0 0 0 1
+segment 280.633 681 -39306.8 25235.2
+lineColor 0 0 1 1
+parabola 3893.12 523 -7.0739e-05 882.2 882.2
+frames 28 -1
+lineColor 0 0 0 1
+segment 265.184 322 -39057.2 -24719.1
+frames 28 -1
+lineColor 0 0 0 1
+segment 636.008 269.075 -242.306 -7635.76
+frames 28 -1
+lineColor 0 0 0 1
+segment 785.76 397 3757.67 -2384.05
+frames 28 -1
+lineColor 0 0 0 1
+segment 1014.76 500.201 3930.99 -1917.84
+frames 28 -1
+lineColor 0 0 0 1
+segment 982.095 663.523 3045.41 4916.47
+frames 28 -1
+lineColor 0 0 0 1
+segment 746.938 735 599.138 7878.66
+frames 28 -1
+lineColor 0 0 0 1
+segment 521.555 729 -2778.87 10699
+frames 28 -1
+lineColor 0 0 0 1
+segment 280.633 681 -41126.3 26363.8
